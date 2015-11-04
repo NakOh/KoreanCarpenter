@@ -1,12 +1,17 @@
 package com.mygdx.manager;
 
 public class AssetManager {
-	private AssetManager instance = new AssetManager();
+	private static AssetManager instance = new AssetManager();
 
-	public AssetManager() {
+	public static AssetManager getInstance() {
+		return instance;
 	}
 
-	public AssetManager getInstance() {
-		return instance;
+	public boolean load() {
+		return true;
+	}
+
+	public boolean unload() {
+		return true;
 	}
 }

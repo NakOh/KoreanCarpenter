@@ -1,5 +1,7 @@
 package com.mygdx.stage;
 
-public class ShopStage {
+import com.badlogic.gdx.scenes.scene2d.Stage;
+
+public class ShopStage extends Stage {
 
 }
