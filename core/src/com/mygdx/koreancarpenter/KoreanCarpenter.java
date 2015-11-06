@@ -2,12 +2,12 @@ package com.mygdx.koreancarpenter;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Input.Keys;
-import com.mygdx.screen.LoadingScreen;
+import com.mygdx.screen.MainScreen;
 
 public class KoreanCarpenter extends Game {
 	@Override
 	public void create() {
-		setScreen(new LoadingScreen());
+		setScreen(new MainScreen());
 	}
 
 	public boolean keyDown(int keycode) {
