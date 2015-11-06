@@ -1,5 +1,7 @@
 package com.mygdx.screen;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.manager.StageManager;
@@ -12,14 +14,22 @@ public class MainScreen implements Screen {
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
-		stageManager = stageManager.getInstance();
+		stageManager = StageManager.getInstance();
 		mainStage = stageManager.getStage("main");
+		setInputProcessor();
 	}
 
 	@Override
 	public void render(float delta) {
 		// TODO Auto-generated method stub
 		mainStage.draw();
+	}
+
+	private void setInputProcessor() {
+		InputMultiplexer multiplexer = new InputMultiplexer();
+		multiplexer.addProcessor(0, mainStage);
+		Gdx.input.setInputProcessor(multiplexer);
+
 	}
 
 	@Override

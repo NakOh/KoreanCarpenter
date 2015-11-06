@@ -1,17 +1,13 @@
 package com.mygdx.manager;
 
 public class AssetManager {
-	private static AssetManager instance = new AssetManager();
+	private static com.badlogic.gdx.assets.AssetManager instance;
 
-	public static AssetManager getInstance() {
+	public static com.badlogic.gdx.assets.AssetManager getInstance() {
+		if (null == instance) {
+			instance = new com.badlogic.gdx.assets.AssetManager();
+		}
 		return instance;
 	}
 
-	public boolean load() {
-		return true;
-	}
-
-	public boolean unload() {
-		return true;
-	}
 }

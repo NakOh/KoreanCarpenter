@@ -8,11 +8,9 @@ public class StageManager {
 	private Stage stage;
 
 	public static StageManager getInstance() {
-
 		if (instance == null) {
 			instance = new StageManager();
 		}
-
 		return instance;
 	}
 
