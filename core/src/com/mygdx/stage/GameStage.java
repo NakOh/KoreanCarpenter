@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class GameStage extends Stage {
+	private final String tag = "GAME_STAGE";
 	private Table levelTable;
 	private Table bottomTable;
 	private TextButton axButton;

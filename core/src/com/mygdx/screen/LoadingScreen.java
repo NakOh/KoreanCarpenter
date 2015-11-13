@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.manager.StageManager;
 
 public class LoadingScreen implements Screen {
-	private final String tag = "LOADING";
+	private final String tag = "LOADING_SCREEN";
 	private StageManager stageManager;
 	private Stage loadingStage;
 

@@ -15,6 +15,7 @@ import com.mygdx.manager.ScreenManager;
 import com.mygdx.service.Screens;
 
 public class MainStage extends Stage {
+	private final String tag = "MAIN_STAGE";
 	private com.badlogic.gdx.assets.AssetManager assetManager;
 	private TextButton startButton;
 	private TextButton rankingButton;

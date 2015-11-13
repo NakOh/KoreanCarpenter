@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.manager.StageManager;
 
 public class GameScreen implements Screen {
-	private final String tag = "GAME";
+	private final String tag = "GAME_SCREEN";
 	private StageManager stageManager;
 	private Stage gameStage;
 
