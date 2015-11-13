@@ -17,6 +17,8 @@ import com.mygdx.service.Screens;
 public class MainStage extends Stage {
 	private com.badlogic.gdx.assets.AssetManager assetManager;
 	private TextButton startButton;
+	private TextButton rankingButton;
+	private TextButton playButton;
 	private Drawable background;
 	private Texture backgroundTexture;
 	private Table table;
@@ -35,9 +37,16 @@ public class MainStage extends Stage {
 		table = new Table();
 		skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 		startButton = new TextButton("GameStart", skin);
+		rankingButton = new TextButton("Ranking", skin);
+		playButton = new TextButton("Play기록", skin);
 		table.setFillParent(true);
-		table.add(startButton);
 		table.setBackground(background);
+		table.bottom();
+		table.add(startButton);
+		table.row();
+		table.add(rankingButton);
+		table.row();
+		table.add(playButton);
 		this.addActor(table);
 	}
 
@@ -46,7 +55,6 @@ public class MainStage extends Stage {
 		startButton.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				ScreenManager.getInstance().show(Screens.GAME);
-
 			}
 		});
 

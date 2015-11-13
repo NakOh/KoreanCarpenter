@@ -4,26 +4,26 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.mygdx.stage.LoadingStage;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mygdx.manager.StageManager;
 
 public class LoadingScreen implements Screen {
-
-	private LoadingStage loadingStage;
+	private final String tag = "LOADING";
+	private StageManager stageManager;
+	private Stage loadingStage;
 
 	@Override
 	public void show() {
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		loadingStage = new LoadingStage();
-		loadingStage.makeStage();
+		stageManager = StageManager.getInstance();
+		loadingStage = stageManager.getStage("loading");
 		setInputProcessor();
 	}
 
 	@Override
 	public void render(float delta) {
-		// TODO Auto-generated method stub
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		loadingStage.act();
 		loadingStage.draw();
-
 	}
 
 	@Override
@@ -40,8 +40,7 @@ public class LoadingScreen implements Screen {
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
-
+		Gdx.app.log(tag, "pause");
 	}
 
 	@Override
@@ -52,14 +51,13 @@ public class LoadingScreen implements Screen {
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-
+		Gdx.app.log(tag, "hide");
+		loadingStage.dispose();
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-
+		Gdx.app.log(tag, "dispose");
 	}
 
 }

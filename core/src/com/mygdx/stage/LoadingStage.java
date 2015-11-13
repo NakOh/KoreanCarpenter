@@ -9,14 +9,16 @@ public class LoadingStage extends Stage {
 
 	private com.badlogic.gdx.assets.AssetManager assetManager;
 
-	public void makeStage() {
+	public Stage makeStage() {
 		assetManager = AssetManager.getInstance();
 		AssetManager.allAssetsload();
+		return this;
 	}
 
 	@Override
 	public void act() {
 		if (assetManager.update()) {
+			// 처음일때는 프롤로그 스크린으로 넘어가도록 하자.
 			ScreenManager.getInstance().show(Screens.MAIN);
 		}
 	}
