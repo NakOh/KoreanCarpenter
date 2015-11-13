@@ -10,7 +10,7 @@ public class KoreanCarpenter extends Game {
 	@Override
 	public void create() {
 		ScreenManager.getInstance().initialize(this);
-		ScreenManager.getInstance().show(Screens.MAIN);
+		ScreenManager.getInstance().show(Screens.LOAD);
 	}
 
 	@Override
