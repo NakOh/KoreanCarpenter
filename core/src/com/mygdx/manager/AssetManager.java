@@ -21,6 +21,17 @@ public class AssetManager {
 		instance.load("texture/title.jpg", Texture.class);
 		instance.load("texture/item1.png", Texture.class);
 		instance.load("texture/item2.png", Texture.class);
+		instance.load("texture/white.png", Texture.class);
+		instance.load("texture/ax.png", Texture.class);
+		instance.load("texture/glove.png", Texture.class);
+		instance.load("texture/wagon.png", Texture.class);
+		instance.load("texture/wagon_tree.png", Texture.class);
+		instance.load("texture/gold.png", Texture.class);
+
+		// EndingList추가
+		instance.load("texture/ending/ending1.png", Texture.class);
+		instance.load("texture/ending/ending2.png", Texture.class);
+
 		instance.finishLoading();
 	}
 

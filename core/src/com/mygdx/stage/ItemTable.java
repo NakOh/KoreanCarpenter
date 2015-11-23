@@ -6,12 +6,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.mygdx.manager.AssetManager;
 
 public class ItemTable extends Table {
 	private final String tag = "ITEM_STAGE";
 	private com.badlogic.gdx.assets.AssetManager assetManager;
+
 	private Skin skin;
+
+	private Texture backgroundTexture;
+	private Drawable background;
+
 	private Texture texture1;
 	private Texture texture2;
 	private TextButton itemInfo1;
@@ -21,11 +27,13 @@ public class ItemTable extends Table {
 
 	public ItemTable() {
 		assetManager = AssetManager.getInstance();
+		backgroundTexture = assetManager.get("texture/white.png");
 	}
 
 	public Table makeTable(int x, int y) {
 		this.reset();
 		skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+		background = new Image(backgroundTexture).getDrawable();
 		texture1 = assetManager.get("texture/item1.png");
 		itemImage1 = new Image(texture1);
 		texture2 = assetManager.get("texture/item2.png");

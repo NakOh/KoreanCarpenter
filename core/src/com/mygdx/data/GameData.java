@@ -1,6 +1,6 @@
 package com.mygdx.data;
 
-public class gameData {
+public class GameData {
 	private boolean firstPlay;
 	private int axLevel;
 	private int gloveLevel;
