@@ -6,6 +6,7 @@ import com.mygdx.stage.LoadingStage;
 import com.mygdx.stage.MainStage;
 
 public class StageManager {
+	private final String tag = "STAGE_MANAGER";
 	private static StageManager instance;
 	private Stage stage;
 
