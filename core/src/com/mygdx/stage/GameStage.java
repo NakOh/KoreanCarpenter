@@ -35,14 +35,13 @@ public class GameStage extends Stage {
 		stageY = this.getViewport().getScreenHeight();
 
 		bagTable = new BagTable();
-		endingTable = new EndingTable();
 		itemTable = new ItemTable();
+		endingTable = new EndingTable();
 
 		gameTable = makeTable("game");
 		bottomTable = makeTable("bottom");
 		levelTable = makeTable("level");
 		treeTable = makeTable("tree");
-
 		addListener();
 
 		addActor(bottomTable);
@@ -52,9 +51,9 @@ public class GameStage extends Stage {
 		return this;
 	}
 
-	public boolean updateLevelTable(Table table) {
-		levelTable.clear();
-		levelTable = table;
+	private boolean updateLevelTable(Table table) {
+		levelTable.reset();
+		levelTable.addActor(table);
 		return true;
 	}
 
@@ -62,7 +61,7 @@ public class GameStage extends Stage {
 		skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 		Table table = new Table();
 		if (tableName.equals("level")) {
-			return bagTable.makeTable(stageX, stageY);
+			table = bagTable.makeTable(stageX, stageY);
 		} else if (tableName.equals("bottom")) {
 			table.setFillParent(true);
 			bagButton = new TextButton("가방 버튼", skin);
@@ -92,6 +91,7 @@ public class GameStage extends Stage {
 		bagButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+				bagTable = new BagTable();
 				updateLevelTable(bagTable.makeTable(stageX, stageY));
 			}
 		});
@@ -99,13 +99,21 @@ public class GameStage extends Stage {
 		itemButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				updateLevelTable(itemTable.makeTable(stageX, stageY));
+
+				itemTable = new ItemTable();
+				if (updateLevelTable(itemTable.makeTable(stageX, stageY)))
+					Gdx.app.log(tag, "itemTable이 만들어 졌습니다");
+				else
+					Gdx.app.log(tag, "itemTable 제작 실패");
 			}
 		});
 
 		endingButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+
+				endingTable = new EndingTable();
+
 				updateLevelTable(endingTable.makeTable(stageX, stageY));
 			}
 		});

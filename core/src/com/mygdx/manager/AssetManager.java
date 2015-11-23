@@ -19,6 +19,8 @@ public class AssetManager {
 		// 이곳에 로드할 모든 리소스를 추가한다.
 		// 많아질 경우 JSON으로 관리하자.
 		instance.load("texture/title.jpg", Texture.class);
+		instance.load("texture/item1.png", Texture.class);
+		instance.load("texture/item2.png", Texture.class);
 		instance.finishLoading();
 	}
 

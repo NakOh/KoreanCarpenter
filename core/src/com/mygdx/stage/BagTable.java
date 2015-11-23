@@ -13,6 +13,7 @@ public class BagTable extends Table {
 	private Skin skin;
 
 	public Table makeTable(int x, int y) {
+		this.reset();
 		skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 		axButton = new TextButton("도끼버튼", skin);
 		gloveButton = new TextButton("장갑버튼", skin);
