@@ -3,10 +3,12 @@ package com.mygdx.stage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.mygdx.data.GameData;
 
 public class GameStage extends Stage {
 	private final String tag = "GAME_STAGE";
@@ -26,11 +28,16 @@ public class GameStage extends Stage {
 	private TextButton endingButton;
 	private TextButton treeButton;
 	private TextButton sellButton;
+	private Label money;
 
 	private Skin skin;
 	private int stageX, stageY;
 
+	private GameData gameData;
+
 	public Stage makeStage() {
+		gameData = GameData.getInstance();
+
 		stageX = this.getViewport().getScreenWidth();
 		stageY = this.getViewport().getScreenHeight();
 
@@ -73,9 +80,11 @@ public class GameStage extends Stage {
 			table.add(endingButton).size(stageX / 3, 100f);
 		} else if (tableName.equals("game")) {
 			table.setFillParent(true);
+			money = new Label("" + gameData.getMoney(), skin);
 			treeButton = new TextButton("이것은 나무", skin);
 			table.top();
-			table.add(treeButton).size(stageX, 400f);
+			table.add(money).size(stageX / 2, 100f);
+			table.add(treeButton).size(stageX / 2, 400f);
 		} else if (tableName.equals("tree")) {
 			table.setFillParent(true);
 			sellButton = new TextButton("나무 판매", skin);
@@ -99,7 +108,6 @@ public class GameStage extends Stage {
 		itemButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-
 				itemTable = new ItemTable();
 				if (updateLevelTable(itemTable.makeTable(stageX, stageY)))
 					Gdx.app.log(tag, "itemTable이 만들어 졌습니다");
@@ -107,15 +115,33 @@ public class GameStage extends Stage {
 					Gdx.app.log(tag, "itemTable 제작 실패");
 			}
 		});
-
 		endingButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-
 				endingTable = new EndingTable();
-
 				updateLevelTable(endingTable.makeTable(stageX, stageY));
 			}
 		});
+		treeButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				gameData.setTree(gameData.getTree() + 1);
+			}
+		});
+		sellButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				gameData.setMoney(gameData.getMoney() + gameData.getTree() * 10);
+				money.setText("" + gameData.getMoney());
+				gameData.setTree(0);
+			}
+		});
 	}
+
+	@Override
+	public void act(float delta) {
+		// 실사간 머니 증가 반영
+		money.setText("" + gameData.getMoney());
+	}
+
 }

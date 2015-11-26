@@ -3,6 +3,7 @@ package com.mygdx.stage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -20,10 +21,12 @@ public class ItemTable extends Table {
 
 	private Texture texture1;
 	private Texture texture2;
-	private TextButton itemInfo1;
-	private TextButton itemInfo2;
+	private Label itemInfo1;
+	private Label itemInfo2;
 	private Image itemImage1;
 	private Image itemImage2;
+	private TextButton itemBuyButton1;
+	private TextButton itemBuyButton2;
 
 	public ItemTable() {
 		assetManager = AssetManager.getInstance();
@@ -38,8 +41,10 @@ public class ItemTable extends Table {
 		itemImage1 = new Image(texture1);
 		texture2 = assetManager.get("texture/item2.png");
 		itemImage2 = new Image(texture2);
-		itemInfo1 = new TextButton("아이템 설명1", skin);
-		itemInfo2 = new TextButton("아이템 설명2", skin);
+		itemInfo1 = new Label("아이템 설명1", skin);
+		itemInfo2 = new Label("아이템 설명2", skin);
+		itemBuyButton1 = new TextButton("item1 구매", skin);
+		itemBuyButton2 = new TextButton("item2 구매", skin);
 		this.setFillParent(true);
 		this.bottom();
 		this.add(itemImage1).size(x / 2, 100f);
@@ -47,6 +52,9 @@ public class ItemTable extends Table {
 		this.row();
 		this.add(itemInfo1).size(x / 2, 100f);
 		this.add(itemInfo2).size(x / 2, 100f);
+		this.row();
+		this.add(itemBuyButton1).size(x / 2, 100f);
+		this.add(itemBuyButton2).size(x / 2, 100f);
 		this.padBottom(150f);
 		return this;
 	}
