@@ -9,14 +9,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.data.GameData;
+import com.mygdx.model.NormalTree;
+import com.mygdx.model.Tree;
 
 public class GameStage extends Stage {
 	private final String tag = "GAME_STAGE";
+	private final String perfect = "PERFECT";
+	private final String good = "GOOD";
+	private final String bad = "BAD";
 	// Table
 	private Table levelTable;
 	private Table bottomTable;
 	private Table gameTable;
-	private Table treeTable;
+	private Table midTable;
 
 	private BagTable bagTable;
 	private EndingTable endingTable;
@@ -28,15 +33,23 @@ public class GameStage extends Stage {
 	private TextButton endingButton;
 	private TextButton treeButton;
 	private TextButton sellButton;
+	private TextButton leftButton;
+	private TextButton rightButton;
+
 	private Label money;
 
+	private int combo = 0;
+
+	private Tree tree;
 	private Skin skin;
 	private int stageX, stageY;
 
 	private GameData gameData;
+	private float gameTime;
 
 	public Stage makeStage() {
 		gameData = GameData.getInstance();
+		tree = makeRandomTree();
 
 		stageX = this.getViewport().getScreenWidth();
 		stageY = this.getViewport().getScreenHeight();
@@ -48,13 +61,13 @@ public class GameStage extends Stage {
 		gameTable = makeTable("game");
 		bottomTable = makeTable("bottom");
 		levelTable = makeTable("level");
-		treeTable = makeTable("tree");
+		midTable = makeTable("mid");
 		addListener();
 
 		addActor(bottomTable);
 		addActor(levelTable);
 		addActor(gameTable);
-		addActor(treeTable);
+		addActor(midTable);
 		return this;
 	}
 
@@ -85,11 +98,15 @@ public class GameStage extends Stage {
 			table.top();
 			table.add(money).size(stageX / 2, 100f);
 			table.add(treeButton).size(stageX / 2, 400f);
-		} else if (tableName.equals("tree")) {
+		} else if (tableName.equals("mid")) {
 			table.setFillParent(true);
-			sellButton = new TextButton("나무 판매", skin);
+			sellButton = new TextButton(gameData.getTree() + "\n" + "나무 판매", skin);
+			leftButton = new TextButton("왼쪽 버튼", skin);
+			rightButton = new TextButton("오른쪽 버튼", skin);
 			table.top();
-			table.add(sellButton);
+			table.add(leftButton).padRight(300f).height(100f);
+			table.add(sellButton).padRight(300f).height(100f);
+			table.add(rightButton).height(100f);
 			table.padTop(400f);
 		}
 
@@ -104,15 +121,11 @@ public class GameStage extends Stage {
 				updateLevelTable(bagTable.makeTable(stageX, stageY));
 			}
 		});
-
 		itemButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				itemTable = new ItemTable();
-				if (updateLevelTable(itemTable.makeTable(stageX, stageY)))
-					Gdx.app.log(tag, "itemTable이 만들어 졌습니다");
-				else
-					Gdx.app.log(tag, "itemTable 제작 실패");
+				updateLevelTable(itemTable.makeTable(stageX, stageY));
 			}
 		});
 		endingButton.addListener(new ClickListener() {
@@ -136,12 +149,83 @@ public class GameStage extends Stage {
 				gameData.setTree(0);
 			}
 		});
+		leftButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// 리듬 체크
+				String check = checkRhythm(x, y);
+				attackTree(check);
+			}
+		});
+		rightButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				String check = checkRhythm(x, y);
+				attackTree(check);
+			}
+		});
+	}
+
+	private void attackTree(String check) {
+		if (check.equals(perfect)) {
+			// 정확하게 일치할 때
+			combo++;
+		} else if (check.equals(good)) {
+			// 약간 어긋났을 때
+			combo++;
+		} else {
+			// 완전 틀림, 콤보 취소, 자동으로 진행될 때 bad
+			// 넘기면 set에서 자동으로 max인지 아닌지 체크해줌
+			gameData.setMaxCombo(combo);
+			combo = 0;
+			tree.setHp(tree.getHp() - gameData.getAxAttackTable()[gameData.getAxLevel() - 1]);
+			if (checkDieTree()) {
+				// 죽었으면 새로 만들자
+				gameData.setTree(gameData.getTree() + 1);
+				tree = makeRandomTree();
+			}
+		}
+	}
+
+	private boolean checkDieTree() {
+		if (tree.getHp() == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private String checkRhythm(float x, float y) {
+		// 리듬 체크하는 로직 추가
+		return bad;
+	}
+
+	private Tree makeRandomTree() {
+		// 나무 생성 기준에 따라 로직을 추가하도록 합시다.
+		Tree newTree;
+		newTree = new NormalTree();
+		return newTree;
 	}
 
 	@Override
 	public void act(float delta) {
 		// 실사간 머니 증가 반영
+		gameTime += delta;
+		// 게임 시간 상으로 1초가 지날 때 마다 작동하는 로직
+		if (gameTime > 1) {
+			// 나무 피가 달게 한다.
+			tree.setHp(tree.getHp() - gameData.getAxAttackTable()[gameData.getAxLevel() - 1]);
+			checkDieTree();
+			if (checkDieTree()) {
+				// 죽었으면 새로 만들자
+				gameData.setTree(gameData.getTree() + 1);
+				tree = makeRandomTree();
+			}
+			Gdx.app.log(tag, String.valueOf(tree.getHp()));
+			gameTime = 0;
+		}
 		money.setText("" + gameData.getMoney());
+		sellButton.setText(gameData.getTree() + "\n" + "나무 판매");
 	}
 
 }

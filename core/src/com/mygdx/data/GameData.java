@@ -8,16 +8,21 @@ public class GameData {
 
 	private final int MAX_LEVEL = 5;
 
+	private int maxCombo;
+
 	private int axLevel = 1;
 	private int gloveLevel = 1;
 	private int wagonLevel = 1;
 	private int money;
 	private int tree;
-	private int treeHp;
 
 	private int[] axMoneyTable = { 0, 100, 200, 300, 400 };
 	private int[] gloveMoneyTable = { 0, 100, 200, 300, 400 };
 	private int[] wagonMoneyTable = { 0, 100, 200, 300, 400 };
+
+	private int[] axAttackTable = { 10, 20, 30, 40, 50 };
+	private float[] glovePercentTable = { 50.0f, 60.0f, 70.0f, 80.0f, 90.0f };
+	private int[] wagonStorageTable = { 100, 200, 300, 400, 500 };
 
 	public static GameData getInstance() {
 		if (instance == null) {
@@ -66,22 +71,6 @@ public class GameData {
 		this.money = money;
 	}
 
-	public int getTree() {
-		return tree;
-	}
-
-	public void setTree(int tree) {
-		this.tree = tree;
-	}
-
-	public int getTreeHp() {
-		return treeHp;
-	}
-
-	public void setTreeHp(int treeHp) {
-		this.treeHp = treeHp;
-	}
-
 	public int[] getAxMoneyTable() {
 		return axMoneyTable;
 	}
@@ -109,4 +98,47 @@ public class GameData {
 	public void setWagonMoneyTable(int[] wagonMoneyTable) {
 		this.wagonMoneyTable = wagonMoneyTable;
 	}
+
+	public int getTree() {
+		return tree;
+	}
+
+	public void setTree(int tree) {
+		this.tree = tree;
+	}
+
+	public int getMaxCombo() {
+		return maxCombo;
+	}
+
+	public void setMaxCombo(int maxCombo) {
+		if (maxCombo > this.maxCombo) {
+			this.maxCombo = maxCombo;
+		}
+	}
+
+	public int[] getAxAttackTable() {
+		return axAttackTable;
+	}
+
+	public void setAxAttackTable(int[] axAttackTable) {
+		this.axAttackTable = axAttackTable;
+	}
+
+	public float[] getGlovePercentTable() {
+		return glovePercentTable;
+	}
+
+	public void setGlovePercentTable(float[] glovePercentTable) {
+		this.glovePercentTable = glovePercentTable;
+	}
+
+	public int[] getWagonStorageTable() {
+		return wagonStorageTable;
+	}
+
+	public void setWagonStorageTable(int[] wagonStorageTable) {
+		this.wagonStorageTable = wagonStorageTable;
+	}
+
 }

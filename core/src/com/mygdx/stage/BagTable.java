@@ -46,8 +46,12 @@ public class BagTable extends Table {
 
 		axLabel = new Label("돌도끼 LV" + gameData.getAxLevel() + "\n" + gameData.getAxMoneyTable()[gameData.getAxLevel()],
 				skin);
-		gloveLabel = new Label("맨 손 LV1 \n 100 ", skin);
-		wagonLabel = new Label("손수레 LV1 \n 100", skin);
+		gloveLabel = new Label(
+				"맨 손 LV" + gameData.getGloveLevel() + "\n" + gameData.getAxMoneyTable()[gameData.getGloveLevel()],
+				skin);
+		wagonLabel = new Label(
+				"손수레 LV" + gameData.getWagonLevel() + "\n" + gameData.getWagonMoneyTable()[gameData.getWagonLevel()],
+				skin);
 
 		axUpgradeButton = new TextButton("도끼버튼", skin);
 		gloveUpgradeButton = new TextButton("장갑버튼", skin);
@@ -82,33 +86,47 @@ public class BagTable extends Table {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				// 현재 레벨 업그레이드에 필요한 돈이 현재 가진 돈 보다 작을 때 업그레이드 가능
-				if (gameData.getAxMoneyTable()[gameData.getAxLevel()] <= gameData.getMoney()) {
-					gameData.setMoney(gameData.getMoney() - gameData.getAxMoneyTable()[gameData.getAxLevel()]);
-					gameData.setAxLevel(gameData.getAxLevel() + 1);
-					axLabel.setText("돌도끼 LV" + gameData.getAxLevel() + "\n"
-							+ gameData.getAxMoneyTable()[gameData.getAxLevel()]);
+				if (gameData.getAxLevel() < gameData.getMAX_LEVEL()) {
+					if (gameData.getAxMoneyTable()[gameData.getAxLevel()] <= gameData.getMoney()) {
+						gameData.setMoney(gameData.getMoney() - gameData.getAxMoneyTable()[gameData.getAxLevel()]);
+						gameData.setAxLevel(gameData.getAxLevel() + 1);
+						axLabel.setText("돌도끼 LV" + gameData.getAxLevel() + "\n"
+								+ gameData.getAxMoneyTable()[gameData.getAxLevel()]);
+					}
+				} else {
+					Gdx.app.log(tag, "업데이트 최대");
 				}
 			}
 		});
 		gloveUpgradeButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				if (gameData.getGloveMoneyTable()[gameData.getGloveLevel()] <= gameData.getMoney()) {
-					gameData.setMoney(gameData.getMoney() - gameData.getGloveMoneyTable()[gameData.getGloveLevel()]);
-					gameData.setGloveLevel(gameData.getGloveLevel() + 1);
-					gloveLabel.setText("맨 손 LV" + gameData.getGloveLevel() + "\n"
-							+ gameData.getAxMoneyTable()[gameData.getGloveLevel()]);
+				if (gameData.getGloveLevel() < gameData.getMAX_LEVEL()) {
+					if (gameData.getGloveMoneyTable()[gameData.getGloveLevel()] <= gameData.getMoney()) {
+						gameData.setMoney(
+								gameData.getMoney() - gameData.getGloveMoneyTable()[gameData.getGloveLevel()]);
+						gameData.setGloveLevel(gameData.getGloveLevel() + 1);
+						gloveLabel.setText("맨 손 LV" + gameData.getGloveLevel() + "\n"
+								+ gameData.getAxMoneyTable()[gameData.getGloveLevel()]);
+					}
+				} else {
+					Gdx.app.log(tag, "업데이트 최대");
 				}
 			}
 		});
 		wagonUpgradeButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				if (gameData.getWagonMoneyTable()[gameData.getWagonLevel()] <= gameData.getMoney()) {
-					gameData.setMoney(gameData.getMoney() - gameData.getWagonMoneyTable()[gameData.getWagonLevel()]);
-					gameData.setWagonLevel(gameData.getWagonLevel() + 1);
-					wagonLabel.setText("손수레 LV" + gameData.getWagonLevel() + "\n"
-							+ gameData.getWagonMoneyTable()[gameData.getWagonLevel()]);
+				if (gameData.getWagonLevel() < gameData.getMAX_LEVEL()) {
+					if (gameData.getWagonMoneyTable()[gameData.getWagonLevel()] <= gameData.getMoney()) {
+						gameData.setMoney(
+								gameData.getMoney() - gameData.getWagonMoneyTable()[gameData.getWagonLevel()]);
+						gameData.setWagonLevel(gameData.getWagonLevel() + 1);
+						wagonLabel.setText("손수레 LV" + gameData.getWagonLevel() + "\n"
+								+ gameData.getWagonMoneyTable()[gameData.getWagonLevel()]);
+					}
+				} else {
+					Gdx.app.log(tag, "업데이트 최대");
 				}
 			}
 		});
