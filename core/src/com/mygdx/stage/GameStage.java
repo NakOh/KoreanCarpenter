@@ -178,7 +178,7 @@ public class GameStage extends Stage {
 			// 넘기면 set에서 자동으로 max인지 아닌지 체크해줌
 			gameData.setMaxCombo(combo);
 			combo = 0;
-			tree.setHp(tree.getHp() - gameData.getAxAttackTable()[gameData.getAxLevel() - 1]);
+			tree.setHp(tree.getHp() - gameData.getAttack());
 			if (checkDieTree()) {
 				// 죽었으면 새로 만들자
 				gameData.setTree(gameData.getTree() + 1);
@@ -214,7 +214,7 @@ public class GameStage extends Stage {
 		// 게임 시간 상으로 1초가 지날 때 마다 작동하는 로직
 		if (gameTime > 1) {
 			// 나무 피가 달게 한다.
-			tree.setHp(tree.getHp() - gameData.getAxAttackTable()[gameData.getAxLevel() - 1]);
+			tree.setHp(tree.getHp() - gameData.getAttack());
 			checkDieTree();
 			if (checkDieTree()) {
 				// 죽었으면 새로 만들자
