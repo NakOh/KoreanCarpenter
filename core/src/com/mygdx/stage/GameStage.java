@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.data.GameData;
+import com.mygdx.model.Bar;
 import com.mygdx.model.NormalTree;
 import com.mygdx.model.Tree;
 
@@ -17,6 +18,7 @@ public class GameStage extends Stage {
 	private final String perfect = "PERFECT";
 	private final String good = "GOOD";
 	private final String bad = "BAD";
+
 	// Table
 	private Table levelTable;
 	private Table bottomTable;
@@ -48,8 +50,11 @@ public class GameStage extends Stage {
 	private float gameTime;
 	private float coolTime;
 
+	private Bar hpBar;
+
 	public Stage makeStage() {
 		gameData = GameData.getInstance();
+
 		tree = makeRandomTree();
 
 		stageX = this.getViewport().getScreenWidth();
@@ -80,7 +85,9 @@ public class GameStage extends Stage {
 
 	private Table makeTable(String tableName) {
 		skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+
 		Table table = new Table();
+
 		if (tableName.equals("level")) {
 			table = bagTable.makeTable(stageX, stageY);
 		} else if (tableName.equals("bottom")) {
@@ -95,10 +102,15 @@ public class GameStage extends Stage {
 		} else if (tableName.equals("game")) {
 			table.setFillParent(true);
 			money = new Label("" + gameData.getMoney(), skin);
+			hpBar = new Bar("hp", skin);
+			hpBar.setValue(tree.getHp());
 			treeButton = new TextButton("이것은 나무", skin);
 			table.top();
-			table.add(money).size(stageX / 2, 100f);
-			table.add(treeButton).size(stageX / 2, 400f);
+			table.add(money).size(stageX / 2, stageY / 19);
+			table.row();
+			table.add(treeButton).size(stageX / 2, 4 * stageY / 19);
+			table.row();
+			table.add(hpBar).size(stageX, stageY / 19);
 		} else if (tableName.equals("mid")) {
 			table.setFillParent(true);
 			sellButton = new TextButton(gameData.getTree() + "\n" + "나무 판매", skin);
@@ -283,6 +295,8 @@ public class GameStage extends Stage {
 		money.setText("" + gameData.getMoney());
 		sellButton.setText(gameData.getTree() + "\n" + "나무 판매");
 		endingTable.act(delta);
+		hpBar.setValue(tree.getHp());
+		hpBar.act(delta);
 	}
 
 }
