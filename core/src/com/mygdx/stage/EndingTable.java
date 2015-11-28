@@ -11,27 +11,27 @@ public class EndingTable extends Table {
 	private Skin skin;
 	private ScrollPane scroll;
 	private TextButton[] endingListButton;
-	private Table table;
+	private Table inTable;
 
 	public Table makeTable(int x, int y) {
 		skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 		endingListButton = new TextButton[100];
-		table = new Table();
+		inTable = new Table();
 		for (int i = 0; i < 100; i++) {
 			endingListButton[i] = new TextButton("EndingList" + i, skin);
-			table.add(endingListButton[i]).size(x - 5, 100f);
-			table.row();
+			inTable.add(endingListButton[i]).size(x - 2, y / 19);
+			inTable.row();
 		}
 		this.reset();
 		this.setFillParent(true);
 		this.bottom();
-		// this.add(endingList1).size(x, 100f);
-		scroll = new ScrollPane(table, skin);
-		scroll.setSmoothScrolling(true);
-		scroll.setupOverscroll(10, 30, 200);
+		scroll = new ScrollPane(inTable, skin);
+		scroll.setForceScroll(false, true);
+		scroll.setFlickScroll(true);
+		scroll.setOverscroll(false, false);
 
-		this.add(scroll).size(x, 350f);
-		this.padBottom(100f);
+		this.add(scroll).size(x, 6 * y / 19);
+		this.padBottom(y / 19);
 		return this;
 	}
 }

@@ -89,9 +89,9 @@ public class GameStage extends Stage {
 			itemButton = new TextButton("아이템 버튼", skin);
 			endingButton = new TextButton("엔딩 버튼", skin);
 			table.bottom();
-			table.add(bagButton).size(stageX / 3, 100f);
-			table.add(itemButton).size(stageX / 3, 100f);
-			table.add(endingButton).size(stageX / 3, 100f);
+			table.add(bagButton).size(stageX / 3, stageY / 19);
+			table.add(itemButton).size(stageX / 3, stageY / 19);
+			table.add(endingButton).size(stageX / 3, stageY / 19);
 		} else if (tableName.equals("game")) {
 			table.setFillParent(true);
 			money = new Label("" + gameData.getMoney(), skin);
@@ -104,11 +104,11 @@ public class GameStage extends Stage {
 			sellButton = new TextButton(gameData.getTree() + "\n" + "나무 판매", skin);
 			leftButton = new TextButton("왼쪽 버튼", skin);
 			rightButton = new TextButton("오른쪽 버튼", skin);
-			table.top();
-			table.add(leftButton).padRight(300f).height(100f);
-			table.add(sellButton).padRight(300f).height(100f);
-			table.add(rightButton).height(100f);
-			table.padTop(400f);
+			table.bottom();
+			table.add(leftButton).padRight(stageX / 4).height(2 * stageY / 19);
+			table.add(sellButton).padRight(stageX / 4).height(2 * stageY / 19);
+			table.add(rightButton).height(2 * stageY / 19);
+			table.padBottom(7 * stageY / 19);
 		}
 
 		return table;
@@ -282,6 +282,7 @@ public class GameStage extends Stage {
 		}
 		money.setText("" + gameData.getMoney());
 		sellButton.setText(gameData.getTree() + "\n" + "나무 판매");
+		endingTable.act(delta);
 	}
 
 }

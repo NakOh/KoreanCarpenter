@@ -24,8 +24,11 @@ public class MainStage extends Stage {
 	private Texture backgroundTexture;
 	private Table table;
 	private Skin skin;
+	private int stageX, stageY;
 
 	public Stage makeStage() {
+		stageX = this.getViewport().getScreenWidth();
+		stageY = this.getViewport().getScreenHeight();
 		assetManager = AssetManager.getInstance();
 		backgroundTexture = assetManager.get("texture/title.jpg");
 		background = new Image(backgroundTexture).getDrawable();
@@ -43,11 +46,11 @@ public class MainStage extends Stage {
 		table.setFillParent(true);
 		table.setBackground(background);
 		table.bottom();
-		table.add(startButton);
+		table.add(startButton).size(stageX / 2, stageY / 16);
 		table.row();
-		table.add(rankingButton);
+		table.add(rankingButton).size(stageX / 2, stageY / 16);
 		table.row();
-		table.add(playButton);
+		table.add(playButton).size(stageX / 2, stageY / 16);
 		this.addActor(table);
 	}
 

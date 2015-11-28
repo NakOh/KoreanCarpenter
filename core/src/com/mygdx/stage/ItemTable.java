@@ -47,15 +47,15 @@ public class ItemTable extends Table {
 		itemBuyButton2 = new TextButton("item2 구매", skin);
 		this.setFillParent(true);
 		this.bottom();
-		this.add(itemImage1).size(x / 2, 100f);
-		this.add(itemImage2).size(x / 2, 100f);
+		this.add(itemImage1).size(x / 2, 2 * y / 19);
+		this.add(itemImage2).size(x / 2, 2 * y / 19);
 		this.row();
-		this.add(itemInfo1).size(x / 2, 100f);
-		this.add(itemInfo2).size(x / 2, 100f);
+		this.add(itemInfo1).size(x / 2, 2 * y / 19);
+		this.add(itemInfo2).size(x / 2, 2 * y / 19);
 		this.row();
-		this.add(itemBuyButton1).size(x / 2, 100f);
-		this.add(itemBuyButton2).size(x / 2, 100f);
-		this.padBottom(150f);
+		this.add(itemBuyButton1).size(x / 2, 2 * y / 19);
+		this.add(itemBuyButton2).size(x / 2, 2 * y / 19);
+		this.padBottom(y / 19);
 		return this;
 	}
 }

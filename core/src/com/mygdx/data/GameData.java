@@ -28,6 +28,7 @@ public class GameData {
 
 	private int money = 999999999;
 	private int tree;
+	private int jewelry;
 
 	private int axNameIndex = 0;
 	private int gloveNameIndex = 0;
@@ -263,5 +264,13 @@ public class GameData {
 
 	public void setFever(boolean fever) {
 		this.fever = fever;
+	}
+
+	public int getJewelry() {
+		return jewelry;
+	}
+
+	public void setJewelry(int jewelry) {
+		this.jewelry = jewelry;
 	}
 }
