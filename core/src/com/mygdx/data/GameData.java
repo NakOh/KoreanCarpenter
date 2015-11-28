@@ -18,9 +18,12 @@ public class GameData {
 	private int accuracy = 50;
 	private int storage = 1000;
 
+	private boolean fever;
+	private float feverTime = 3f;
+	private int feverGauge;
+
 	private int axMoney;
 	private int gloveMoney;
-
 	private int wagonMoney;
 
 	private int money = 999999999;
@@ -236,5 +239,29 @@ public class GameData {
 
 	public void setWagonNameIndex(int wagonNameIndex) {
 		this.wagonNameIndex = wagonNameIndex;
+	}
+
+	public float getFeverTime() {
+		return feverTime;
+	}
+
+	public void setFeverTime(float feverTime) {
+		this.feverTime = feverTime;
+	}
+
+	public int getFeverGauge() {
+		return feverGauge;
+	}
+
+	public void setFeverGauge(int feverGauge) {
+		this.feverGauge = feverGauge;
+	}
+
+	public boolean isFever() {
+		return fever;
+	}
+
+	public void setFever(boolean fever) {
+		this.fever = fever;
 	}
 }

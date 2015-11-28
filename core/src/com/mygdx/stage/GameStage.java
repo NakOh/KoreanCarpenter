@@ -46,6 +46,7 @@ public class GameStage extends Stage {
 
 	private GameData gameData;
 	private float gameTime;
+	private float coolTime;
 
 	public Stage makeStage() {
 		gameData = GameData.getInstance();
@@ -138,7 +139,7 @@ public class GameStage extends Stage {
 		treeButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				gameData.setTree(gameData.getTree() + 1);
+				// gameData.setTree(gameData.getTree() + 1);
 			}
 		});
 		sellButton.addListener(new ClickListener() {
@@ -152,16 +153,15 @@ public class GameStage extends Stage {
 		leftButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// 리듬 체크
-				String check = checkRhythm(x, y);
-				attackTree(check);
+				// 리듬 체크 후 공격 x,y좌표는 오브젝트 좌표를 받아와야함 (현재는 버튼 좌표)
+				attackTree(checkRhythm(x, y));
 			}
 		});
 		rightButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				String check = checkRhythm(x, y);
-				attackTree(check);
+				// 리듬 체크 후 공격 x,y좌표는 오브젝트 좌표를 받아와야함 (현재는 버튼 좌표)
+				attackTree(checkRhythm(x, y));
 			}
 		});
 	}
@@ -169,21 +169,64 @@ public class GameStage extends Stage {
 	private void attackTree(String check) {
 		if (check.equals(perfect)) {
 			// 정확하게 일치할 때
+			float damage;
 			combo++;
+			gameData.setFeverGauge(gameData.getFeverGauge() + 10);
+			damage = (float) (gameData.getAttack() * (2 + combo * 0.01));
+			tree.setHp(tree.getHp() - (int) damage);
+			if (checkDieTree()) {
+				// 죽었으면 새로 만들자
+				if (checkStorage()) {
+					gameData.setTree(gameData.getTree() + 1);
+				}
+				tree = makeRandomTree();
+			}
 		} else if (check.equals(good)) {
 			// 약간 어긋났을 때
+			float damage;
 			combo++;
+			gameData.setFeverGauge(gameData.getFeverGauge() + 7);
+			damage = (float) (gameData.getAttack() * (1.5 + combo * 0.005));
+			tree.setHp(tree.getHp() - (int) damage);
+			if (checkDieTree()) {
+				// 죽었으면 새로 만들자
+				if (checkStorage()) {
+					gameData.setTree(gameData.getTree() + 1);
+				}
+				tree = makeRandomTree();
+			}
 		} else {
 			// 완전 틀림, 콤보 취소, 자동으로 진행될 때 bad
 			// 넘기면 set에서 자동으로 max인지 아닌지 체크해줌
-			gameData.setMaxCombo(combo);
-			combo = 0;
-			tree.setHp(tree.getHp() - gameData.getAttack());
-			if (checkDieTree()) {
-				// 죽었으면 새로 만들자
-				gameData.setTree(gameData.getTree() + 1);
-				tree = makeRandomTree();
+
+			if (coolTime > 3) {
+				gameData.setMaxCombo(combo);
+				combo = 0;
+				gameData.setFeverGauge(gameData.getFeverGauge() + 5);
+				if (checkAccuracy()) {
+					tree.setHp(tree.getHp() - gameData.getAttack());
+					if (checkDieTree()) {
+						// 죽었으면 새로 만들자
+						if (checkStorage()) {
+							gameData.setTree(gameData.getTree() + 1);
+						}
+						tree = makeRandomTree();
+					}
+				}
+				coolTime = 0;
+			} else {
+				Gdx.app.log(tag, "coolTime입니다");
 			}
+		}
+	}
+
+	private boolean checkAccuracy() {
+		int random = (int) (Math.random() * 100);
+		if (gameData.getAccuracy() > random) {
+			return true;
+		} else {
+			Gdx.app.log(tag, "빗나감");
+			return false;
 		}
 	}
 
@@ -200,6 +243,14 @@ public class GameStage extends Stage {
 		return bad;
 	}
 
+	private boolean checkStorage() {
+		if (gameData.getStorage() >= gameData.getTree()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	private Tree makeRandomTree() {
 		// 나무 생성 기준에 따라 로직을 추가하도록 합시다.
 		Tree newTree;
@@ -211,17 +262,22 @@ public class GameStage extends Stage {
 	public void act(float delta) {
 		// 실사간 머니 증가 반영
 		gameTime += delta;
+		coolTime += delta;
 		// 게임 시간 상으로 1초가 지날 때 마다 작동하는 로직
-		if (gameTime > 1) {
+		if (gameTime > 5) {
 			// 나무 피가 달게 한다.
-			tree.setHp(tree.getHp() - gameData.getAttack());
-			checkDieTree();
-			if (checkDieTree()) {
-				// 죽었으면 새로 만들자
-				gameData.setTree(gameData.getTree() + 1);
-				tree = makeRandomTree();
+			if (checkAccuracy()) {
+				tree.setHp(tree.getHp() - gameData.getAttack());
+				checkDieTree();
+				if (checkDieTree()) {
+					// 죽었으면 새로 만들자
+					if (checkStorage()) {
+						gameData.setTree(gameData.getTree() + 1);
+					}
+					tree = makeRandomTree();
+				}
+				Gdx.app.log(tag, String.valueOf(tree.getHp()));
 			}
-			Gdx.app.log(tag, String.valueOf(tree.getHp()));
 			gameTime = 0;
 		}
 		money.setText("" + gameData.getMoney());
