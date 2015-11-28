@@ -1,14 +1,17 @@
 package com.mygdx.stage;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.data.GameData;
+import com.mygdx.manager.AssetManager;
 import com.mygdx.model.Bar;
 import com.mygdx.model.NormalTree;
 import com.mygdx.model.Tree;
@@ -19,11 +22,13 @@ public class GameStage extends Stage {
 	private final String good = "GOOD";
 	private final String bad = "BAD";
 
+	private com.badlogic.gdx.assets.AssetManager assetManager;
 	// Table
 	private Table levelTable;
 	private Table bottomTable;
 	private Table gameTable;
 	private Table midTable;
+	private Table topTable;
 
 	private BagTable bagTable;
 	private EndingTable endingTable;
@@ -50,9 +55,18 @@ public class GameStage extends Stage {
 	private float gameTime;
 	private float coolTime;
 
+	private Texture bigTexture;
+	private Texture smallLeftTexture;
+	private Texture smallRightTexture;
+
+	private Image big;
+	private Image[] smallLeft = new Image[100];
+	private Image[] smallRight = new Image[100];
+
 	private Bar hpBar;
 
 	public Stage makeStage() {
+		assetManager = AssetManager.getInstance();
 		gameData = GameData.getInstance();
 
 		tree = makeRandomTree();
@@ -68,13 +82,36 @@ public class GameStage extends Stage {
 		bottomTable = makeTable("bottom");
 		levelTable = makeTable("level");
 		midTable = makeTable("mid");
+		topTable = makeTable("top");
+
+		makeRhythmObject();
+
 		addListener();
 
+		addActor(topTable);
 		addActor(bottomTable);
 		addActor(levelTable);
 		addActor(gameTable);
 		addActor(midTable);
 		return this;
+	}
+
+	private void makeRhythmObject() {
+		bigTexture = assetManager.get("texture/big.png");
+		smallLeftTexture = assetManager.get("texture/smallLeft.png");
+		smallRightTexture = assetManager.get("texture/smallRight.png");
+
+		big = new Image(bigTexture);
+		smallLeft[0] = new Image(smallLeftTexture);
+		smallRight[0] = new Image(smallRightTexture);
+
+		big.setPosition(stageX / 19, 17 * stageY / 19);
+		smallLeft[0].setPosition(stageX, 17 * stageY / 19);
+
+		addActor(big);
+		addActor(smallLeft[0]);
+		Gdx.app.log(tag, String.valueOf(big.getX() + String.valueOf(big.getY())));
+
 	}
 
 	private boolean updateLevelTable(Table table) {
@@ -108,9 +145,10 @@ public class GameStage extends Stage {
 			table.top();
 			table.add(money).size(stageX / 2, stageY / 19);
 			table.row();
-			table.add(treeButton).size(stageX / 2, 4 * stageY / 19);
+			table.add(treeButton).size(stageX / 2, 7 * stageY / 19);
 			table.row();
 			table.add(hpBar).size(stageX, stageY / 19);
+			table.padTop(stageY / 19);
 		} else if (tableName.equals("mid")) {
 			table.setFillParent(true);
 			sellButton = new TextButton(gameData.getTree() + "\n" + "나무 판매", skin);
@@ -121,6 +159,9 @@ public class GameStage extends Stage {
 			table.add(sellButton).padRight(stageX / 4).height(2 * stageY / 19);
 			table.add(rightButton).height(2 * stageY / 19);
 			table.padBottom(7 * stageY / 19);
+		} else if (tableName.equals("top")) {
+			table.setFillParent(true);
+			table.top();
 		}
 
 		return table;
@@ -275,6 +316,7 @@ public class GameStage extends Stage {
 		// 실사간 머니 증가 반영
 		gameTime += delta;
 		coolTime += delta;
+		smallLeft[0].setPosition(smallLeft[0].getX() - 1, smallLeft[0].getY());
 		// 게임 시간 상으로 1초가 지날 때 마다 작동하는 로직
 		if (gameTime > 5) {
 			// 나무 피가 달게 한다.
@@ -288,7 +330,6 @@ public class GameStage extends Stage {
 					}
 					tree = makeRandomTree();
 				}
-				Gdx.app.log(tag, String.valueOf(tree.getHp()));
 			}
 			gameTime = 0;
 		}
