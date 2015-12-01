@@ -1,5 +1,7 @@
 package com.mygdx.stage;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -54,16 +56,19 @@ public class GameStage extends Stage {
 	private GameData gameData;
 	private float gameTime;
 	private float coolTime;
+	private float[] zazinmoriTime = { 0.8f, 0.6f, 0.2f, 0.4f, 0.4f, 0.2f, 0.2f, 0.2f, 0.2f, 0.6f, 0.2f, 0.4f, 0.4f };
+	private boolean[] isLeft = { true, false, true, false, true, false, true, false, true, false, true, false, true };
+	private float delayTime;
 
 	private Texture bigTexture;
 	private Texture smallLeftTexture;
 	private Texture smallRightTexture;
 
 	private Image big;
-	private Image[] smallLeft = new Image[100];
-	private Image[] smallRight = new Image[100];
+	private ArrayList<Image> imageList;
 
 	private Bar hpBar;
+	private int i;
 
 	public Stage makeStage() {
 		assetManager = AssetManager.getInstance();
@@ -84,8 +89,7 @@ public class GameStage extends Stage {
 		midTable = makeTable("mid");
 		topTable = makeTable("top");
 
-		makeRhythmObject();
-
+		makeBigObject();
 		addListener();
 
 		addActor(topTable);
@@ -96,22 +100,28 @@ public class GameStage extends Stage {
 		return this;
 	}
 
-	private void makeRhythmObject() {
+	private void makeBigObject() {
 		bigTexture = assetManager.get("texture/big.png");
-		smallLeftTexture = assetManager.get("texture/smallLeft.png");
-		smallRightTexture = assetManager.get("texture/smallRight.png");
-
+		imageList = new ArrayList<Image>();
 		big = new Image(bigTexture);
-		smallLeft[0] = new Image(smallLeftTexture);
-		smallRight[0] = new Image(smallRightTexture);
-
 		big.setPosition(stageX / 19, 17 * stageY / 19);
-		smallLeft[0].setPosition(stageX, 17 * stageY / 19);
-
 		addActor(big);
-		addActor(smallLeft[0]);
-		Gdx.app.log(tag, String.valueOf(big.getX() + String.valueOf(big.getY())));
+	}
 
+	private void makeLeftObject() {
+		smallLeftTexture = assetManager.get("texture/smallLeft.png");
+		Image image = new Image(smallLeftTexture);
+		image.setPosition(stageX, 17 * stageY / 19);
+		addActor(image);
+		imageList.add(image);
+	}
+
+	private void makeRightObject() {
+		smallRightTexture = assetManager.get("texture/smallRight.png");
+		Image image = new Image(smallRightTexture);
+		image.setPosition(stageX, 17 * stageY / 19);
+		addActor(image);
+		imageList.add(image);
 	}
 
 	private boolean updateLevelTable(Table table) {
@@ -311,12 +321,34 @@ public class GameStage extends Stage {
 		return newTree;
 	}
 
+	private void zazinmori(float delta) {
+		delayTime += delta;
+		if (delayTime > zazinmoriTime[i]) {
+			if (isLeft[i]) {
+				makeLeftObject();
+			} else {
+				makeRightObject();
+			}
+			delayTime = 0;
+			i++;
+			if (i == zazinmoriTime.length) {
+				i = 0;
+			}
+		}
+	}
+
 	@Override
 	public void act(float delta) {
 		// 실사간 머니 증가 반영
 		gameTime += delta;
 		coolTime += delta;
-		smallLeft[0].setPosition(smallLeft[0].getX() - 1, smallLeft[0].getY());
+
+		zazinmori(delta);
+
+		for (Image image : imageList) {
+			image.setPosition(image.getX() - 5, image.getY());
+		}
+
 		// 게임 시간 상으로 1초가 지날 때 마다 작동하는 로직
 		if (gameTime > 5) {
 			// 나무 피가 달게 한다.
