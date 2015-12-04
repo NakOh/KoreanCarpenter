@@ -111,6 +111,7 @@ public class GameStage extends Stage {
 	private void makeLeftObject() {
 		smallLeftTexture = assetManager.get("texture/smallLeft.png");
 		Image image = new Image(smallLeftTexture);
+		image.setSize(stageX / 7, 2 * stageY / 19);
 		image.setPosition(stageX, 17 * stageY / 19);
 		addActor(image);
 		imageList.add(image);
@@ -119,6 +120,7 @@ public class GameStage extends Stage {
 	private void makeRightObject() {
 		smallRightTexture = assetManager.get("texture/smallRight.png");
 		Image image = new Image(smallRightTexture);
+		image.setSize(stageX / 7, 2 * stageY / 19);
 		image.setPosition(stageX, 17 * stageY / 19);
 		addActor(image);
 		imageList.add(image);
@@ -347,6 +349,12 @@ public class GameStage extends Stage {
 
 		for (Image image : imageList) {
 			image.setPosition(image.getX() - 5, image.getY());
+		}
+		if (!imageList.isEmpty()) {
+			if (imageList.get(0).getX() < big.getX() - imageList.get(0).getX()) {
+				imageList.get(0).remove();
+				imageList.remove(0);
+			}
 		}
 
 		// 게임 시간 상으로 1초가 지날 때 마다 작동하는 로직
