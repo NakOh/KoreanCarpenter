@@ -28,6 +28,7 @@ public class SaveManager {
 		prefs.putInteger("wagonLevel", gameData.getWagonLevel());
 		prefs.putInteger("maxCombo", gameData.getMaxCombo());
 		prefs.putInteger("storage", gameData.getStorage());
+		prefs.putInteger("tree", gameData.getTree());
 		prefs.putBoolean("firstPlay", gameData.isFirstPlay());
 		Gdx.app.log(tag, "Save완료");
 	}
@@ -40,6 +41,7 @@ public class SaveManager {
 		gameData.setWagonLevel(prefs.getInteger("wagonLevel", 1));
 		gameData.setMaxCombo(prefs.getInteger("maxCombo", 0));
 		gameData.setStorage(prefs.getInteger("storage", 1000));
+		gameData.setTree(prefs.getInteger("tree", 0));
 		gameData.setFirstPlay(prefs.getBoolean("firstPlay", false));
 		Gdx.app.log(tag, "Load완료");
 	}
