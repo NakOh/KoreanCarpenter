@@ -3,6 +3,7 @@ package com.mygdx.manager;
 import com.badlogic.gdx.graphics.Texture;
 
 public class AssetManager {
+	private final String tag = "AssetManager";
 	private static com.badlogic.gdx.assets.AssetManager instance;
 
 	public static com.badlogic.gdx.assets.AssetManager getInstance() {

@@ -5,15 +5,18 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mygdx.manager.SaveManager;
 import com.mygdx.manager.StageManager;
 
 public class GameScreen implements Screen {
 	private final String tag = "GAME_SCREEN";
 	private StageManager stageManager;
 	private Stage gameStage;
+	private SaveManager saveManager;
 
 	@Override
 	public void show() {
+		saveManager = SaveManager.getInstance();
 		stageManager = StageManager.getInstance();
 		gameStage = stageManager.getStage("game");
 		setInputProcessor();
@@ -41,6 +44,7 @@ public class GameScreen implements Screen {
 	@Override
 	public void pause() {
 		Gdx.app.log(tag, "pause");
+		saveManager.save();
 	}
 
 	@Override
@@ -51,12 +55,14 @@ public class GameScreen implements Screen {
 	@Override
 	public void hide() {
 		Gdx.app.log(tag, "hide");
+		saveManager.save();
 		gameStage.dispose();
 	}
 
 	@Override
 	public void dispose() {
 		Gdx.app.log(tag, "dispose");
+		saveManager.save();
 	}
 
 }

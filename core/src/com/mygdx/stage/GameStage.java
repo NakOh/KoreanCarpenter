@@ -12,8 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.mygdx.data.GameData;
 import com.mygdx.manager.AssetManager;
+import com.mygdx.manager.SaveManager;
 import com.mygdx.model.Bar;
 import com.mygdx.model.NormalTree;
 import com.mygdx.model.Tree;
@@ -25,6 +27,7 @@ public class GameStage extends Stage {
 	private final String bad = "BAD";
 
 	private com.badlogic.gdx.assets.AssetManager assetManager;
+	private SaveManager saveManager;
 	// Table
 	private Table levelTable;
 	private Table bottomTable;
@@ -45,7 +48,8 @@ public class GameStage extends Stage {
 	private TextButton leftButton;
 	private TextButton rightButton;
 
-	private Label money;
+	private Label moneyLabel;
+	private Label comboLabel;
 
 	private int combo = 0;
 
@@ -56,9 +60,10 @@ public class GameStage extends Stage {
 	private GameData gameData;
 	private float gameTime;
 	private float coolTime;
+	private float delayTime;
+	private float saveTime;
 	private float[] zazinmoriTime = { 0.8f, 0.6f, 0.2f, 0.4f, 0.4f, 0.2f, 0.2f, 0.2f, 0.2f, 0.6f, 0.2f, 0.4f, 0.4f };
 	private boolean[] isLeft = { true, false, true, false, true, false, true, false, true, false, true, false, true };
-	private float delayTime;
 
 	private Texture bigTexture;
 	private Texture smallLeftTexture;
@@ -73,6 +78,7 @@ public class GameStage extends Stage {
 	public Stage makeStage() {
 		assetManager = AssetManager.getInstance();
 		gameData = GameData.getInstance();
+		saveManager = SaveManager.getInstance();
 
 		tree = makeRandomTree();
 
@@ -97,6 +103,7 @@ public class GameStage extends Stage {
 		addActor(levelTable);
 		addActor(gameTable);
 		addActor(midTable);
+
 		return this;
 	}
 
@@ -104,7 +111,7 @@ public class GameStage extends Stage {
 		bigTexture = assetManager.get("texture/big.png");
 		imageList = new ArrayList<Image>();
 		big = new Image(bigTexture);
-		big.setPosition(stageX / 19, 17 * stageY / 19);
+		big.setPosition(2 * stageX / 19, 17 * stageY / 19);
 		addActor(big);
 	}
 
@@ -150,14 +157,19 @@ public class GameStage extends Stage {
 			table.add(endingButton).size(stageX / 3, stageY / 19);
 		} else if (tableName.equals("game")) {
 			table.setFillParent(true);
-			money = new Label("" + gameData.getMoney(), skin);
+			moneyLabel = new Label("" + gameData.getMoney(), skin);
+			comboLabel = new Label("" + combo, skin);
+			comboLabel.setAlignment(Align.center);
+			moneyLabel.setAlignment(Align.center);
 			hpBar = new Bar("hp", skin);
 			hpBar.setValue(tree.getHp());
 			treeButton = new TextButton("이것은 나무", skin);
 			table.top();
-			table.add(money).size(stageX / 2, stageY / 19);
-			table.row();
 			table.add(treeButton).size(stageX / 2, 7 * stageY / 19);
+			table.row();
+			table.add(moneyLabel).size(stageX / 2, stageY / 19);
+			table.row();
+			table.add(comboLabel).size(stageX / 2, stageY / 19);
 			table.row();
 			table.add(hpBar).size(stageX, stageY / 19);
 			table.padTop(stageY / 19);
@@ -211,7 +223,7 @@ public class GameStage extends Stage {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				gameData.setMoney(gameData.getMoney() + gameData.getTree() * 10);
-				money.setText("" + gameData.getMoney());
+				moneyLabel.setText("" + gameData.getMoney());
 				gameData.setTree(0);
 			}
 		});
@@ -305,10 +317,21 @@ public class GameStage extends Stage {
 
 	private String checkRhythm(float x, float y) {
 		// 리듬 체크하는 로직 추가
-		return bad;
+		if (imageList.get(0).getX() > big.getX() - 2 && imageList.get(0).getX() < big.getX() + 20) {
+			Gdx.app.log(tag, perfect);
+			return perfect;
+		} else if (imageList.get(0).getX() > big.getX() + 20 && imageList.get(0).getX() < big.getX() + 40) {
+			// 현재 눌러야할 버튼이 조준점보다 크고, 그 범위가 20이내라면
+			Gdx.app.log(tag, good);
+			return good;
+		} else {
+			Gdx.app.log(tag, bad);
+			return bad;
+		}
 	}
 
 	private boolean checkStorage() {
+		// 용량을 초과했는가?
 		if (gameData.getStorage() >= gameData.getTree()) {
 			return true;
 		} else {
@@ -317,7 +340,7 @@ public class GameStage extends Stage {
 	}
 
 	private Tree makeRandomTree() {
-		// 나무 생성 기준에 따라 로직을 추가하도록 합시다.
+		// 나무 생성 기준에 따라 로직을 추가하도록 합시다. 아직 정해진 바 없음
 		Tree newTree;
 		newTree = new NormalTree();
 		return newTree;
@@ -333,6 +356,7 @@ public class GameStage extends Stage {
 			}
 			delayTime = 0;
 			i++;
+			// 무한 반복
 			if (i == zazinmoriTime.length) {
 				i = 0;
 			}
@@ -344,16 +368,17 @@ public class GameStage extends Stage {
 		// 실사간 머니 증가 반영
 		gameTime += delta;
 		coolTime += delta;
-
+		saveTime += delta;
 		zazinmori(delta);
 
 		for (Image image : imageList) {
-			image.setPosition(image.getX() - 5, image.getY());
+			image.setPosition(image.getX() - 3, image.getY());
 		}
 		if (!imageList.isEmpty()) {
-			if (imageList.get(0).getX() < big.getX() - imageList.get(0).getX()) {
+			if (imageList.get(0).getX() < big.getX() - 3) {
 				imageList.get(0).remove();
 				imageList.remove(0);
+				gameData.setMaxCombo(combo);
 			}
 		}
 
@@ -373,11 +398,17 @@ public class GameStage extends Stage {
 			}
 			gameTime = 0;
 		}
-		money.setText("" + gameData.getMoney());
+		moneyLabel.setText("" + gameData.getMoney());
+		comboLabel.setText("" + combo);
 		sellButton.setText(gameData.getTree() + "\n" + "나무 판매");
 		endingTable.act(delta);
 		hpBar.setValue(tree.getHp());
 		hpBar.act(delta);
+		if (saveTime > 5) {
+			saveManager.save();
+			saveTime = 0;
+		}
+
 	}
 
 }

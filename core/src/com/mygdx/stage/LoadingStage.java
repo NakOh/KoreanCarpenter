@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.manager.AssetManager;
+import com.mygdx.manager.SaveManager;
 import com.mygdx.manager.ScreenManager;
 import com.mygdx.service.Screens;
 
@@ -19,6 +20,7 @@ public class LoadingStage extends Stage {
 	private Image loadingFrame, loadingBg, screenBg;
 	private float percent;
 	private final int loadingBarFinishOffset = 10;
+	private SaveManager saveManager;
 
 	public Stage makeStage() {
 		assetManager = AssetManager.getInstance();
@@ -52,6 +54,8 @@ public class LoadingStage extends Stage {
 		addActor(loadingBarTable);
 
 		AssetManager.allAssetsload();
+		saveManager = SaveManager.getInstance();
+		saveManager.load();
 		return this;
 	}
 

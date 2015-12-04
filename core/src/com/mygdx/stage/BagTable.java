@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.mygdx.data.GameData;
 import com.mygdx.manager.AssetManager;
 import com.mygdx.manager.FormulaManager;
@@ -61,6 +62,9 @@ public class BagTable extends Table {
 		wagonLabel = new Label(gameData.getWagonName()[gameData.getWagonNameIndex()] + " LV" + gameData.getWagonLevel()
 				+ "\n" + gameData.getWagonMoney(), skin);
 
+		axLabel.setAlignment(Align.center);
+		gloveLabel.setAlignment(Align.center);
+		wagonLabel.setAlignment(Align.center);
 		axUpgradeButton = new TextButton("레벨 업 \n 데미지" + formulaManager.axUpgradeFormula(gameData.getAxLevel()), skin);
 		gloveUpgradeButton = new TextButton("레벨 업 \n 적중률" + (gameData.getAccuracy() + 1), skin);
 		wagonUpgradeButton = new TextButton("레벨 업 \n 저장량" + (gameData.getStorage() + 1000), skin);
