@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.data.GameData;
 import com.mygdx.manager.AssetManager;
@@ -34,7 +36,7 @@ public class GameStage extends Stage {
 	private Table bottomTable;
 	private Table gameTable;
 	private Table midTable;
-	private Table topTable;
+	private Table hpBarTable;
 
 	private BagTable bagTable;
 	private EndingTable endingTable;
@@ -47,6 +49,9 @@ public class GameStage extends Stage {
 	private TextButton sellButton;
 	private TextButton leftButton;
 	private TextButton rightButton;
+
+	private TextButton itemButton1;
+	private TextButton itemButton2;
 
 	private Label moneyLabel;
 	private Label comboLabel;
@@ -96,12 +101,12 @@ public class GameStage extends Stage {
 		bottomTable = makeTable("bottom");
 		levelTable = makeTable("level");
 		midTable = makeTable("mid");
-		topTable = makeTable("top");
+		hpBarTable = makeTable("hp");
 
 		makeBigObject();
 		addListener();
 
-		addActor(topTable);
+		addActor(hpBarTable);
 		addActor(bottomTable);
 		addActor(levelTable);
 		addActor(gameTable);
@@ -160,24 +165,48 @@ public class GameStage extends Stage {
 			table.add(itemButton).size(stageX / 3, stageY / 19);
 			table.add(endingButton).size(stageX / 3, stageY / 19);
 		} else if (tableName.equals("game")) {
+			Table subTable1 = new Table();
+			Table subTable2 = new Table();
+			Table subTable3 = new Table();
+
 			table.setFillParent(true);
-			moneyLabel = new Label("" + gameData.getMoney(), skin);
-			comboLabel = new Label("" + combo, skin);
+
+			moneyLabel = new Label("현재 돈" + gameData.getMoney(), skin);
+			comboLabel = new Label("현재 Combo" + combo, skin);
+
+			moneyLabel.setFontScale(0.8f);
+			comboLabel.setFontScale(0.8f);
+
+			itemButton1 = new TextButton("아이템1", skin);
+			itemButton2 = new TextButton("아이템2", skin);
+
 			comboLabel.setAlignment(Align.center);
 			moneyLabel.setAlignment(Align.center);
+
 			hpBar = new Bar("hp", skin);
 			hpBar.setValue(tree.getHp());
+
 			treeTexture = assetManager.get("texture/tree/tree100%.png");
 			tree.setTreeImage(new Image(treeTexture));
-			table.top();
-			table.add(tree.getTreeImage()).size(stageX / 2, 7 * stageY / 19);
-			table.row();
-			table.add(moneyLabel).size(stageX / 2, stageY / 19);
-			table.row();
-			table.add(comboLabel).size(stageX / 2, stageY / 19);
-			table.row();
-			table.add(hpBar).size(stageX, stageY / 19);
-			table.padTop(stageY / 19);
+
+			table.bottom();
+
+			table.padBottom(10 * stageY / 19);
+
+			subTable1.add(tree.getTreeImage()).size(stageX / 2, 7 * stageY / 19);
+
+			subTable2.add(comboLabel);
+			subTable2.row();
+			subTable2.add(moneyLabel);
+
+			subTable3.add(itemButton1);
+			subTable3.row();
+			subTable3.add(itemButton2);
+
+			table.add(subTable2).width(stageX / 3).top().left();
+			table.add(subTable1).width(stageX / 3);
+			table.add(subTable3).width(stageX / 3).bottom().right();
+
 		} else if (tableName.equals("mid")) {
 			table.setFillParent(true);
 			sellButton = new TextButton(gameData.getTree() + "\n" + "나무 판매", skin);
@@ -186,11 +215,13 @@ public class GameStage extends Stage {
 			table.bottom();
 			table.add(leftButton).padRight(stageX / 4).height(2 * stageY / 19);
 			table.add(sellButton).padRight(stageX / 4).height(2 * stageY / 19);
-			table.add(rightButton).height(2 * stageY / 19);
+			table.add(rightButton).height(2 * stageY / 19 + 10);
 			table.padBottom(7 * stageY / 19);
-		} else if (tableName.equals("top")) {
+		} else if (tableName.equals("hp")) {
 			table.setFillParent(true);
-			table.top();
+			table.add(hpBar).width(stageX).height(stageY / 19);
+			table.bottom();
+			table.padBottom(9 * stageY / 19);
 		}
 
 		return table;
@@ -252,6 +283,15 @@ public class GameStage extends Stage {
 			gameData.setFeverGauge(gameData.getFeverGauge() + 10);
 			damage = (float) (gameData.getAttack() * (2 + combo * 0.01));
 			tree.setHp(tree.getHp() - (int) damage);
+			if ((100 * tree.getHp() / tree.getMaxHp()) <= 33) {
+				treeTexture = assetManager.get("texture/tree/tree33%.png");
+				tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
+				tree.getTreeImage().act(1f);
+			} else if ((100 * tree.getHp() / tree.getMaxHp()) <= 66) {
+				treeTexture = assetManager.get("texture/tree/tree66%.png");
+				tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
+				tree.getTreeImage().act(1f);
+			}
 			if (checkDieTree()) {
 				// 죽었으면 새로 만들자
 				if (checkStorage()) {
@@ -266,6 +306,15 @@ public class GameStage extends Stage {
 			gameData.setFeverGauge(gameData.getFeverGauge() + 7);
 			damage = (float) (gameData.getAttack() * (1.5 + combo * 0.005));
 			tree.setHp(tree.getHp() - (int) damage);
+			if ((100 * tree.getHp() / tree.getMaxHp()) <= 33) {
+				treeTexture = assetManager.get("texture/tree/tree33%.png");
+				tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
+				tree.getTreeImage().act(1f);
+			} else if ((100 * tree.getHp() / tree.getMaxHp()) <= 66) {
+				treeTexture = assetManager.get("texture/tree/tree66%.png");
+				tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
+				tree.getTreeImage().act(1f);
+			}
 			if (checkDieTree()) {
 				// 죽었으면 새로 만들자
 				if (checkStorage()) {
@@ -282,6 +331,15 @@ public class GameStage extends Stage {
 				gameData.setFeverGauge(gameData.getFeverGauge() + 5);
 				if (checkAccuracy()) {
 					tree.setHp(tree.getHp() - gameData.getAttack());
+					if ((100 * tree.getHp() / tree.getMaxHp()) <= 33) {
+						treeTexture = assetManager.get("texture/tree/tree33%.png");
+						tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
+						tree.getTreeImage().act(1f);
+					} else if ((100 * tree.getHp() / tree.getMaxHp()) <= 66) {
+						treeTexture = assetManager.get("texture/tree/tree66%.png");
+						tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
+						tree.getTreeImage().act(1f);
+					}
 					if (checkDieTree()) {
 						// 죽었으면 새로 만들자
 						if (checkStorage()) {
@@ -353,6 +411,8 @@ public class GameStage extends Stage {
 		// 나무 생성 기준에 따라 로직을 추가하도록 합시다. 아직 정해진 바 없음
 		Tree newTree;
 		newTree = new NormalTree();
+		treeTexture = assetManager.get("texture/tree/tree100%.png");
+		newTree.setTreeImage(new Image(treeTexture));
 		return newTree;
 	}
 
@@ -397,6 +457,15 @@ public class GameStage extends Stage {
 			// 나무 피가 달게 한다.
 			if (checkAccuracy()) {
 				tree.setHp(tree.getHp() - gameData.getAttack());
+				if ((100 * tree.getHp() / tree.getMaxHp()) <= 33) {
+					treeTexture = assetManager.get("texture/tree/tree33%.png");
+					tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
+					tree.getTreeImage().act(delta);
+				} else if ((100 * tree.getHp() / tree.getMaxHp()) <= 66) {
+					treeTexture = assetManager.get("texture/tree/tree66%.png");
+					tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
+					tree.getTreeImage().act(delta);
+				}
 				checkDieTree();
 				if (checkDieTree()) {
 					// 죽었으면 새로 만들자
@@ -408,12 +477,13 @@ public class GameStage extends Stage {
 			}
 			gameTime = 0;
 		}
-		moneyLabel.setText("" + gameData.getMoney());
-		comboLabel.setText("" + combo);
+		moneyLabel.setText("현재 돈 " + gameData.getMoney());
+		comboLabel.setText("현재 Combo " + combo);
 		sellButton.setText(gameData.getTree() + "\n" + "나무 판매");
 		endingTable.act(delta);
 		hpBar.setValue(tree.getHp());
 		hpBar.act(delta);
+
 		if (saveTime > 5) {
 			saveManager.save();
 			saveTime = 0;
