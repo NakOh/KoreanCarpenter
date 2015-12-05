@@ -20,18 +20,33 @@ public class AssetManager {
 		// 이곳에 로드할 모든 리소스를 추가한다.
 		// 많아질 경우 JSON으로 관리하자.
 		instance.load("texture/title.jpg", Texture.class);
+
 		instance.load("texture/item1.png", Texture.class);
 		instance.load("texture/item2.png", Texture.class);
+
 		instance.load("texture/white.png", Texture.class);
 		instance.load("texture/red.png", Texture.class);
-		instance.load("texture/ax.png", Texture.class);
-		instance.load("texture/glove.png", Texture.class);
-		instance.load("texture/wagon.png", Texture.class);
-		instance.load("texture/wagon_tree.png", Texture.class);
+
+		instance.load("texture/ax/ax.png", Texture.class);
+		instance.load("texture/ax/ax_01.png", Texture.class);
+		instance.load("texture/ax/ax_02.png", Texture.class);
+		instance.load("texture/ax/ax_03.png", Texture.class);
+
+		instance.load("texture/glove/glove.png", Texture.class);
+		instance.load("texture/glove/glove_01.png", Texture.class);
+
+		instance.load("texture/wagon/wagon.png", Texture.class);
+		instance.load("texture/wagon/wagon_tree.png", Texture.class);
+
 		instance.load("texture/gold.png", Texture.class);
-		instance.load("texture/big.png", Texture.class);
-		instance.load("texture/smallLeft.png", Texture.class);
-		instance.load("texture/smallRight.png", Texture.class);
+
+		instance.load("texture/object/big.png", Texture.class);
+		instance.load("texture/object/smallLeft.png", Texture.class);
+		instance.load("texture/object/smallRight.png", Texture.class);
+
+		instance.load("texture/tree/tree33%.png", Texture.class);
+		instance.load("texture/tree/tree66%.png", Texture.class);
+		instance.load("texture/tree/tree100%.png", Texture.class);
 
 		// EndingList추가
 		instance.load("texture/ending/ending1.png", Texture.class);

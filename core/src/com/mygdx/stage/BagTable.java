@@ -88,9 +88,9 @@ public class BagTable extends Table {
 	}
 
 	private void getTexture() {
-		axImage = assetManager.get("texture/ax.png");
-		gloveImage = assetManager.get("texture/glove.png");
-		wagonImage = assetManager.get("texture/wagon.png");
+		axImage = assetManager.get("texture/ax/ax.png");
+		gloveImage = assetManager.get("texture/glove/glove.png");
+		wagonImage = assetManager.get("texture/wagon/wagon.png");
 	}
 
 	private void addListener() {

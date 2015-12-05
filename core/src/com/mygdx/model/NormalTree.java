@@ -20,10 +20,12 @@ public class NormalTree implements Tree {
 		this.hp = hp;
 	}
 
+	@Override
 	public Image getTreeImage() {
 		return treeImage;
 	}
 
+	@Override
 	public void setTreeImage(Image treeImage) {
 		this.treeImage = treeImage;
 	}

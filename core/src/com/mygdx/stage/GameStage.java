@@ -44,7 +44,6 @@ public class GameStage extends Stage {
 	private TextButton bagButton;
 	private TextButton itemButton;
 	private TextButton endingButton;
-	private TextButton treeButton;
 	private TextButton sellButton;
 	private TextButton leftButton;
 	private TextButton rightButton;
@@ -70,6 +69,7 @@ public class GameStage extends Stage {
 	private Texture bigTexture;
 	private Texture smallLeftTexture;
 	private Texture smallRightTexture;
+	private Texture treeTexture;
 
 	private Image big;
 	private ArrayList<ObjectImage> imageList;
@@ -111,15 +111,16 @@ public class GameStage extends Stage {
 	}
 
 	private void makeBigObject() {
-		bigTexture = assetManager.get("texture/big.png");
+		bigTexture = assetManager.get("texture/object/big.png");
 		imageList = new ArrayList<ObjectImage>();
 		big = new Image(bigTexture);
+		big.setSize(stageX / 7, 2 * stageY / 19);
 		big.setPosition(2 * stageX / 19, 17 * stageY / 19);
 		addActor(big);
 	}
 
 	private void makeLeftObject() {
-		smallLeftTexture = assetManager.get("texture/smallLeft.png");
+		smallLeftTexture = assetManager.get("texture/object/smallLeft.png");
 		ObjectImage image = new ObjectImage(smallLeftTexture);
 		image.setLeft(true);
 		image.setSize(stageX / 7, 2 * stageY / 19);
@@ -129,7 +130,7 @@ public class GameStage extends Stage {
 	}
 
 	private void makeRightObject() {
-		smallRightTexture = assetManager.get("texture/smallRight.png");
+		smallRightTexture = assetManager.get("texture/object/smallRight.png");
 		ObjectImage image = new ObjectImage(smallRightTexture);
 		image.setLeft(false);
 		image.setSize(stageX / 7, 2 * stageY / 19);
@@ -166,9 +167,10 @@ public class GameStage extends Stage {
 			moneyLabel.setAlignment(Align.center);
 			hpBar = new Bar("hp", skin);
 			hpBar.setValue(tree.getHp());
-			treeButton = new TextButton("이것은 나무", skin);
+			treeTexture = assetManager.get("texture/tree/tree100%.png");
+			tree.setTreeImage(new Image(treeTexture));
 			table.top();
-			table.add(treeButton).size(stageX / 2, 7 * stageY / 19);
+			table.add(tree.getTreeImage()).size(stageX / 2, 7 * stageY / 19);
 			table.row();
 			table.add(moneyLabel).size(stageX / 2, stageY / 19);
 			table.row();
@@ -214,12 +216,6 @@ public class GameStage extends Stage {
 			public void clicked(InputEvent event, float x, float y) {
 				endingTable = new EndingTable();
 				updateLevelTable(endingTable.makeTable(stageX, stageY));
-			}
-		});
-		treeButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				// gameData.setTree(gameData.getTree() + 1);
 			}
 		});
 		sellButton.addListener(new ClickListener() {
