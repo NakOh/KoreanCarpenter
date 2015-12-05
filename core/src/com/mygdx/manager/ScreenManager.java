@@ -3,12 +3,14 @@ package com.mygdx.manager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.IntMap;
+import com.mygdx.model.IGoogleServices;
 import com.mygdx.service.Screens;
 
 public class ScreenManager {
 	private static ScreenManager instance;
 	private Game game;
 	private IntMap<Screen> screens;
+	private IGoogleServices actionResolver;
 
 	private ScreenManager() {
 		screens = new IntMap<Screen>();
@@ -21,8 +23,9 @@ public class ScreenManager {
 		return instance;
 	}
 
-	public void initialize(Game game) {
+	public void initialize(Game game, IGoogleServices actionResolver) {
 		this.game = game;
+		this.setActionResolver(actionResolver);
 	}
 
 	public void show(Screens screen) {
@@ -46,6 +49,14 @@ public class ScreenManager {
 		}
 		screens.clear();
 		instance = null;
+	}
+
+	public IGoogleServices getActionResolver() {
+		return actionResolver;
+	}
+
+	public void setActionResolver(IGoogleServices actionResolver) {
+		this.actionResolver = actionResolver;
 	}
 
 }

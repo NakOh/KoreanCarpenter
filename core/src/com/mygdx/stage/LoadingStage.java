@@ -23,6 +23,8 @@ public class LoadingStage extends Stage {
 	private SaveManager saveManager;
 
 	public Stage makeStage() {
+		if (!ScreenManager.getInstance().getActionResolver().getSignedInGPGS())
+			ScreenManager.getInstance().getActionResolver().loginGPGS();
 		assetManager = AssetManager.getInstance();
 		// 로딩 화면을 만들기 위한 리소스 미리 로딩
 		assetManager.load("loading/loading.pack", TextureAtlas.class);

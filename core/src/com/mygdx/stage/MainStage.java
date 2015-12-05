@@ -62,6 +62,25 @@ public class MainStage extends Stage {
 			}
 		});
 
+		rankingButton.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				if (ScreenManager.getInstance().getActionResolver().getSignedInGPGS())
+					ScreenManager.getInstance().getActionResolver().getLeaderboardGPGS();
+				else
+					ScreenManager.getInstance().getActionResolver().loginGPGS();
+			}
+		});
+
+		playButton.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				if (ScreenManager.getInstance().getActionResolver().getSignedInGPGS())
+					ScreenManager.getInstance().getActionResolver().getAchievementsGPGS();
+				else
+					ScreenManager.getInstance().getActionResolver().loginGPGS();
+
+			}
+		});
+
 	}
 
 }

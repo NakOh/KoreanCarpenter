@@ -7,7 +7,7 @@ import com.mygdx.model.IGoogleServices;
 import com.mygdx.service.Screens;
 
 public class KoreanCarpenter extends Game {
-	IGoogleServices actionResolver;
+	private IGoogleServices actionResolver;
 
 	public KoreanCarpenter(IGoogleServices actionResolver) {
 		this.actionResolver = actionResolver;
@@ -15,7 +15,7 @@ public class KoreanCarpenter extends Game {
 
 	@Override
 	public void create() {
-		ScreenManager.getInstance().initialize(this);
+		ScreenManager.getInstance().initialize(this, this.actionResolver);
 		ScreenManager.getInstance().show(Screens.LOAD);
 	}
 
