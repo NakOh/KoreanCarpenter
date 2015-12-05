@@ -3,9 +3,15 @@ package com.mygdx.koreancarpenter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Input.Keys;
 import com.mygdx.manager.ScreenManager;
+import com.mygdx.model.IGoogleServices;
 import com.mygdx.service.Screens;
 
 public class KoreanCarpenter extends Game {
+	IGoogleServices actionResolver;
+
+	public KoreanCarpenter(IGoogleServices actionResolver) {
+		this.actionResolver = actionResolver;
+	}
 
 	@Override
 	public void create() {
