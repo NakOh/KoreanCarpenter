@@ -35,4 +35,10 @@ public class ActionResolverDesktop implements IGoogleServices {
 	public void getAchievementsGPGS() {
 		System.out.println("getAchievementsGPGS");
 	}
+
+	@Override
+	public void incrementAchivementGPGS(String achievementId) {
+		System.out.println("incrementAchivementGPGS");
+
+	}
 }

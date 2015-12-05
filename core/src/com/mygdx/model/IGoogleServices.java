@@ -12,4 +12,6 @@ public interface IGoogleServices {
 	public void getLeaderboardGPGS();
 
 	public void getAchievementsGPGS();
+
+	public void incrementAchivementGPGS(String achievementId);
 }

@@ -56,7 +56,6 @@ public class GameScreen implements Screen {
 	public void hide() {
 		Gdx.app.log(tag, "hide");
 		saveManager.save();
-		gameStage.dispose();
 	}
 
 	@Override

@@ -53,6 +53,7 @@ public class LoadingScreen implements Screen {
 	public void hide() {
 		Gdx.app.log(tag, "hide");
 		loadingStage.dispose();
+		this.dispose();
 	}
 
 	@Override

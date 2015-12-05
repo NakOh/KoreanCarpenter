@@ -434,6 +434,7 @@ public class GameStage extends Stage {
 				gameTime = 0;
 			}
 		}
+
 		moneyLabel.setText("현재 돈 " + gameData.getMoney());
 		comboLabel.setText("현재 Combo " + combo);
 		sellButton.setText(gameData.getTree() + "\n" + "나무 판매");

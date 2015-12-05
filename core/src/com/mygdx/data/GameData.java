@@ -1,5 +1,7 @@
 package com.mygdx.data;
 
+import com.mygdx.manager.ScreenManager;
+
 public class GameData {
 
 	private static GameData instance;
@@ -104,6 +106,7 @@ public class GameData {
 	public void setMaxCombo(int maxCombo) {
 		if (maxCombo > this.maxCombo) {
 			this.maxCombo = maxCombo;
+			ScreenManager.getInstance().getActionResolver().submitScoreGPGS(maxCombo);
 		}
 	}
 

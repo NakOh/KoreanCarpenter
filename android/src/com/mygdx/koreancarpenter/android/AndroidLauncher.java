@@ -10,6 +10,7 @@ import com.mygdx.model.IGoogleServices;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 
 public class AndroidLauncher extends AndroidApplication implements GameHelperListener, IGoogleServices {
 	private GameHelper gameHelper;
@@ -24,6 +25,15 @@ public class AndroidLauncher extends AndroidApplication implements GameHelperLis
 			gameHelper.enableDebugLog(true);
 		}
 		gameHelper.setup(this);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
@@ -103,5 +113,10 @@ public class AndroidLauncher extends AndroidApplication implements GameHelperLis
 			loginGPGS();
 		}
 
+	}
+
+	@Override
+	public void incrementAchivementGPGS(String achievementId) {
+		Games.Achievements.increment(gameHelper.getApiClient(), achievementId, 1);
 	}
 }
