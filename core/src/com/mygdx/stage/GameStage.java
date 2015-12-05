@@ -282,46 +282,14 @@ public class GameStage extends Stage {
 			combo++;
 			gameData.setFeverGauge(gameData.getFeverGauge() + 10);
 			damage = (float) (gameData.getAttack() * (2 + combo * 0.01));
-			tree.setHp(tree.getHp() - (int) damage);
-			if ((100 * tree.getHp() / tree.getMaxHp()) <= 33) {
-				treeTexture = assetManager.get("texture/tree/tree33%.png");
-				tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
-				tree.getTreeImage().act(1f);
-			} else if ((100 * tree.getHp() / tree.getMaxHp()) <= 66) {
-				treeTexture = assetManager.get("texture/tree/tree66%.png");
-				tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
-				tree.getTreeImage().act(1f);
-			}
-			if (checkDieTree()) {
-				// 죽었으면 새로 만들자
-				if (checkStorage()) {
-					gameData.setTree(gameData.getTree() + 1);
-				}
-				tree = makeRandomTree();
-			}
+			updateTreeImage((int) damage);
 		} else if (check.equals(good)) {
 			// 약간 어긋났을 때
 			float damage;
 			combo++;
 			gameData.setFeverGauge(gameData.getFeverGauge() + 7);
 			damage = (float) (gameData.getAttack() * (1.5 + combo * 0.005));
-			tree.setHp(tree.getHp() - (int) damage);
-			if ((100 * tree.getHp() / tree.getMaxHp()) <= 33) {
-				treeTexture = assetManager.get("texture/tree/tree33%.png");
-				tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
-				tree.getTreeImage().act(1f);
-			} else if ((100 * tree.getHp() / tree.getMaxHp()) <= 66) {
-				treeTexture = assetManager.get("texture/tree/tree66%.png");
-				tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
-				tree.getTreeImage().act(1f);
-			}
-			if (checkDieTree()) {
-				// 죽었으면 새로 만들자
-				if (checkStorage()) {
-					gameData.setTree(gameData.getTree() + 1);
-				}
-				tree = makeRandomTree();
-			}
+			updateTreeImage((int) damage);
 		} else {
 			// 완전 틀림, 콤보 취소, 자동으로 진행될 때 bad
 			// 넘기면 set에서 자동으로 max인지 아닌지 체크해줌
@@ -330,23 +298,7 @@ public class GameStage extends Stage {
 				combo = 0;
 				gameData.setFeverGauge(gameData.getFeverGauge() + 5);
 				if (checkAccuracy()) {
-					tree.setHp(tree.getHp() - gameData.getAttack());
-					if ((100 * tree.getHp() / tree.getMaxHp()) <= 33) {
-						treeTexture = assetManager.get("texture/tree/tree33%.png");
-						tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
-						tree.getTreeImage().act(1f);
-					} else if ((100 * tree.getHp() / tree.getMaxHp()) <= 66) {
-						treeTexture = assetManager.get("texture/tree/tree66%.png");
-						tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
-						tree.getTreeImage().act(1f);
-					}
-					if (checkDieTree()) {
-						// 죽었으면 새로 만들자
-						if (checkStorage()) {
-							gameData.setTree(gameData.getTree() + 1);
-						}
-						tree = makeRandomTree();
-					}
+					updateTreeImage(gameData.getAttack());
 				}
 				coolTime = 0;
 			} else {
@@ -371,6 +323,28 @@ public class GameStage extends Stage {
 		} else {
 			return false;
 		}
+	}
+
+	private void updateTreeImage(int damage) {
+		tree.setHp(tree.getHp() - damage);
+		if ((100 * tree.getHp() / tree.getMaxHp()) <= 33) {
+			treeTexture = assetManager.get("texture/tree/tree33%.png");
+			tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
+			tree.getTreeImage().act(1f);
+		} else if ((100 * tree.getHp() / tree.getMaxHp()) <= 66) {
+			treeTexture = assetManager.get("texture/tree/tree66%.png");
+			tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
+			tree.getTreeImage().act(1f);
+		}
+
+		if (checkDieTree()) {
+			// 죽었으면 새로 만들자
+			if (checkStorage()) {
+				gameData.setTree(gameData.getTree() + 1);
+			}
+			tree = makeRandomTree();
+		}
+
 	}
 
 	private String checkRhythm(float x, float y) {
@@ -456,26 +430,9 @@ public class GameStage extends Stage {
 		if (gameTime > 5) {
 			// 나무 피가 달게 한다.
 			if (checkAccuracy()) {
-				tree.setHp(tree.getHp() - gameData.getAttack());
-				if ((100 * tree.getHp() / tree.getMaxHp()) <= 33) {
-					treeTexture = assetManager.get("texture/tree/tree33%.png");
-					tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
-					tree.getTreeImage().act(delta);
-				} else if ((100 * tree.getHp() / tree.getMaxHp()) <= 66) {
-					treeTexture = assetManager.get("texture/tree/tree66%.png");
-					tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
-					tree.getTreeImage().act(delta);
-				}
-				checkDieTree();
-				if (checkDieTree()) {
-					// 죽었으면 새로 만들자
-					if (checkStorage()) {
-						gameData.setTree(gameData.getTree() + 1);
-					}
-					tree = makeRandomTree();
-				}
+				updateTreeImage(gameData.getAttack());
+				gameTime = 0;
 			}
-			gameTime = 0;
 		}
 		moneyLabel.setText("현재 돈 " + gameData.getMoney());
 		comboLabel.setText("현재 Combo " + combo);
