@@ -168,45 +168,31 @@ public class GameStage extends Stage {
 			Table subTable1 = new Table();
 			Table subTable2 = new Table();
 			Table subTable3 = new Table();
-
 			table.setFillParent(true);
-
 			moneyLabel = new Label("현재 돈" + gameData.getMoney(), skin);
 			comboLabel = new Label("현재 Combo" + combo, skin);
-
 			moneyLabel.setFontScale(0.8f);
 			comboLabel.setFontScale(0.8f);
-
 			itemButton1 = new TextButton("아이템1", skin);
 			itemButton2 = new TextButton("아이템2", skin);
-
 			comboLabel.setAlignment(Align.center);
 			moneyLabel.setAlignment(Align.center);
-
 			hpBar = new Bar("hp", skin);
 			hpBar.setValue(tree.getHp());
-
 			treeTexture = assetManager.get("texture/tree/tree100%.png");
 			tree.setTreeImage(new Image(treeTexture));
-
 			table.bottom();
-
 			table.padBottom(10 * stageY / 19);
-
 			subTable1.add(tree.getTreeImage()).size(stageX / 2, 7 * stageY / 19);
-
 			subTable2.add(comboLabel);
 			subTable2.row();
 			subTable2.add(moneyLabel);
-
 			subTable3.add(itemButton1);
 			subTable3.row();
 			subTable3.add(itemButton2);
-
 			table.add(subTable2).width(stageX / 3).top().left();
 			table.add(subTable1).width(stageX / 3);
 			table.add(subTable3).width(stageX / 3).bottom().right();
-
 		} else if (tableName.equals("mid")) {
 			table.setFillParent(true);
 			sellButton = new TextButton(gameData.getTree() + "\n" + "나무 판매", skin);
@@ -223,7 +209,6 @@ public class GameStage extends Stage {
 			table.bottom();
 			table.padBottom(9 * stageY / 19);
 		}
-
 		return table;
 	}
 
@@ -231,22 +216,19 @@ public class GameStage extends Stage {
 		bagButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				bagTable = new BagTable();
-				updateLevelTable(bagTable.makeTable(stageX, stageY));
+				updateLevelTable(BagTable.getInstance(stageX, stageY));
 			}
 		});
 		itemButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				itemTable = new ItemTable();
-				updateLevelTable(itemTable.makeTable(stageX, stageY));
+				updateLevelTable(ItemTable.getInstance(stageX, stageY));
 			}
 		});
 		endingButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				endingTable = new EndingTable();
-				updateLevelTable(endingTable.makeTable(stageX, stageY));
+				updateLevelTable(EndingTable.getInstance(stageX, stageY));
 			}
 		});
 		sellButton.addListener(new ClickListener() {

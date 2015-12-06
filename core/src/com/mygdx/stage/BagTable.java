@@ -19,6 +19,7 @@ public class BagTable extends Table {
 
 	private com.badlogic.gdx.assets.AssetManager assetManager;
 	private Skin skin;
+	private static Table instance;
 
 	// Label
 	private Label axLabel;
@@ -42,6 +43,13 @@ public class BagTable extends Table {
 		gameData = GameData.getInstance();
 		formulaManager = new FormulaManager();
 		assetManager = AssetManager.getInstance();
+	}
+
+	public static Table getInstance(int x, int y) {
+		if (instance == null) {
+			instance = new BagTable().makeTable(x, y);
+		}
+		return instance;
 	}
 
 	public Table makeTable(int x, int y) {

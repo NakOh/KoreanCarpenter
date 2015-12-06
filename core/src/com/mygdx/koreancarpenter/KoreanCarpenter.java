@@ -1,7 +1,6 @@
 package com.mygdx.koreancarpenter;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Input.Keys;
 import com.mygdx.manager.ScreenManager;
 import com.mygdx.model.IGoogleServices;
 import com.mygdx.service.Screens;
@@ -25,9 +24,4 @@ public class KoreanCarpenter extends Game {
 		ScreenManager.getInstance().dispose();
 	}
 
-	public boolean keyDown(int keycode) {
-		if (keycode == Keys.BACK) {
-		}
-		return false;
-	}
 }
