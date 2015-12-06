@@ -41,6 +41,7 @@ public class GameStage extends Stage {
 	private BagTable bagTable;
 	private EndingTable endingTable;
 	private ItemTable itemTable;
+	private Table subTable1;
 
 	// 임시 Button, 실제 사용할 UI로 대체
 	private TextButton bagButton;
@@ -74,7 +75,9 @@ public class GameStage extends Stage {
 	private Texture bigTexture;
 	private Texture smallLeftTexture;
 	private Texture smallRightTexture;
-	private Texture treeTexture;
+	private Texture treeTexture100;
+	private Texture treeTexture66;
+	private Texture treeTexture33;
 
 	private Image big;
 	private ArrayList<ObjectImage> imageList;
@@ -88,7 +91,9 @@ public class GameStage extends Stage {
 		gameData = GameData.getInstance();
 		saveManager = SaveManager.getInstance();
 
-		tree = makeRandomTree();
+		treeTexture100 = assetManager.get("texture/tree/tree100%.png");
+		treeTexture66 = assetManager.get("texture/tree/tree66%.png");
+		treeTexture33 = assetManager.get("texture/tree/tree33%.png");
 
 		stageX = this.getViewport().getScreenWidth();
 		stageY = this.getViewport().getScreenHeight();
@@ -150,6 +155,12 @@ public class GameStage extends Stage {
 		return true;
 	}
 
+	private boolean updateSubTable() {
+		subTable1.reset();
+		subTable1.add(tree.getTreeImage()).size(stageX / 2, 7 * stageY / 19);
+		return true;
+	}
+
 	private Table makeTable(String tableName) {
 		skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 		Table table = new Table();
@@ -165,7 +176,8 @@ public class GameStage extends Stage {
 			table.add(itemButton).size(stageX / 3, stageY / 19);
 			table.add(endingButton).size(stageX / 3, stageY / 19);
 		} else if (tableName.equals("game")) {
-			Table subTable1 = new Table();
+			makeRandomTree();
+			subTable1 = new Table();
 			Table subTable2 = new Table();
 			Table subTable3 = new Table();
 			table.setFillParent(true);
@@ -179,8 +191,6 @@ public class GameStage extends Stage {
 			moneyLabel.setAlignment(Align.center);
 			hpBar = new Bar("hp", skin);
 			hpBar.setValue(tree.getHp());
-			treeTexture = assetManager.get("texture/tree/tree100%.png");
-			tree.setTreeImage(new Image(treeTexture));
 			table.bottom();
 			table.padBottom(10 * stageY / 19);
 			subTable1.add(tree.getTreeImage()).size(stageX / 2, 7 * stageY / 19);
@@ -193,6 +203,7 @@ public class GameStage extends Stage {
 			table.add(subTable2).width(stageX / 3).top().left();
 			table.add(subTable1).width(stageX / 3);
 			table.add(subTable3).width(stageX / 3).bottom().right();
+
 		} else if (tableName.equals("mid")) {
 			table.setFillParent(true);
 			sellButton = new TextButton(gameData.getTree() + "\n" + "나무 판매", skin);
@@ -310,13 +321,11 @@ public class GameStage extends Stage {
 	private void updateTreeImage(int damage) {
 		tree.setHp(tree.getHp() - damage);
 		if ((100 * tree.getHp() / tree.getMaxHp()) <= 33) {
-			treeTexture = assetManager.get("texture/tree/tree33%.png");
-			tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
-			tree.getTreeImage().act(1f);
+			tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture33)));
 		} else if ((100 * tree.getHp() / tree.getMaxHp()) <= 66) {
-			treeTexture = assetManager.get("texture/tree/tree66%.png");
-			tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture)));
-			tree.getTreeImage().act(1f);
+			tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture66)));
+		} else {
+			tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture100)));
 		}
 
 		if (checkDieTree()) {
@@ -324,7 +333,8 @@ public class GameStage extends Stage {
 			if (checkStorage()) {
 				gameData.setTree(gameData.getTree() + 1);
 			}
-			tree = makeRandomTree();
+			makeRandomTree();
+			updateSubTable();
 		}
 
 	}
@@ -363,13 +373,10 @@ public class GameStage extends Stage {
 		}
 	}
 
-	private Tree makeRandomTree() {
+	private void makeRandomTree() {
 		// 나무 생성 기준에 따라 로직을 추가하도록 합시다. 아직 정해진 바 없음
-		Tree newTree;
-		newTree = new NormalTree();
-		treeTexture = assetManager.get("texture/tree/tree100%.png");
-		newTree.setTreeImage(new Image(treeTexture));
-		return newTree;
+		tree = new NormalTree();
+		tree.setTreeImage(new Image(treeTexture100));
 	}
 
 	private void zazinmori(float delta) {
