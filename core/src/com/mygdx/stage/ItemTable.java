@@ -49,10 +49,14 @@ public class ItemTable extends Table {
 		itemImage1 = new Image(texture1);
 		texture2 = assetManager.get("texture/item2.png");
 		itemImage2 = new Image(texture2);
-		itemInfo1 = new Label("아이템 설명1", skin);
-		itemInfo2 = new Label("아이템 설명2", skin);
-		itemBuyButton1 = new TextButton("item1 구매", skin);
-		itemBuyButton2 = new TextButton("item2 구매", skin);
+		itemInfo1 = new Label("아드레날린 \n 다음 피버 타임에서 일시적으로 공격력이 300% 증가", skin);
+		itemInfo2 = new Label("바르카스 \n 즉시 피버타임 돌입", skin);
+		itemInfo1.setFontScale(0.5f);
+		itemInfo2.setFontScale(0.5f);
+		itemInfo1.setWrap(true);
+		itemInfo2.setWrap(true);
+		itemBuyButton1 = new TextButton("10 보석", skin);
+		itemBuyButton2 = new TextButton("10 보석", skin);
 		this.setFillParent(true);
 		this.bottom();
 		this.add(itemImage1).size(x / 2, y * 0.08f);

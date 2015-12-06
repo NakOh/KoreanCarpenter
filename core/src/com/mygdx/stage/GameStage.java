@@ -39,8 +39,6 @@ public class GameStage extends Stage {
 	private Table hpBarTable;
 
 	private BagTable bagTable;
-	private EndingTable endingTable;
-	private ItemTable itemTable;
 	private Table subTable1;
 
 	// 임시 Button, 실제 사용할 UI로 대체
@@ -68,10 +66,11 @@ public class GameStage extends Stage {
 	private float coolTime;
 	private float delayTime;
 	private float saveTime;
+	private float feverTime;
 	private float[] zazinmoriTime = { 0.8f, 0.6f, 0.2f, 0.4f, 0.4f, 0.2f, 0.2f, 0.2f, 0.2f, 0.6f, 0.2f, 0.4f, 0.4f };
 	private boolean[] zazinmoriIsLeft = { true, false, true, false, true, false, true, false, true, false, true, false,
 			true };
-
+	private float objectSpeed = 1f;
 	private Texture bigTexture;
 	private Texture smallLeftTexture;
 	private Texture smallRightTexture;
@@ -101,9 +100,11 @@ public class GameStage extends Stage {
 		stageX = this.getViewport().getScreenWidth();
 		stageY = this.getViewport().getScreenHeight();
 
+		BagTable.getInstance(stageX, stageY);
+		ItemTable.getInstance(stageX, stageY);
+		EndingTable.getInstance(stageX, stageY);
+
 		bagTable = new BagTable();
-		itemTable = new ItemTable();
-		endingTable = new EndingTable();
 
 		gameTable = makeTable("game");
 		bottomTable = makeTable("bottom");
@@ -271,16 +272,24 @@ public class GameStage extends Stage {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				// 리듬 체크 후 공격 x,y좌표는 오브젝트 좌표를 받아와야함 (현재는 버튼 좌표)
-				isLeftButton = true;
-				attackTree(checkRhythm(x, y));
+				if (gameData.isFever()) {
+					attackTree(perfect);
+				} else {
+					isLeftButton = true;
+					attackTree(checkRhythm(x, y));
+				}
 			}
 		});
 		rightButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				// 리듬 체크 후 공격 x,y좌표는 오브젝트 좌표를 받아와야함 (현재는 버튼 좌표)
-				isLeftButton = false;
-				attackTree(checkRhythm(x, y));
+				if (gameData.isFever()) {
+					attackTree(perfect);
+				} else {
+					isLeftButton = false;
+					attackTree(checkRhythm(x, y));
+				}
 			}
 		});
 	}
@@ -293,6 +302,13 @@ public class GameStage extends Stage {
 			gameData.setFeverGauge(gameData.getFeverGauge() + 10);
 			damage = (float) (gameData.getAttack() * (2 + combo * 0.01));
 			updateTreeImage((int) damage);
+			coolTime = 0;
+			if (gameData.isFever()) {
+
+			} else {
+				imageList.get(0).remove();
+				imageList.remove(0);
+			}
 		} else if (check.equals(good)) {
 			// 약간 어긋났을 때
 			float damage;
@@ -300,15 +316,24 @@ public class GameStage extends Stage {
 			gameData.setFeverGauge(gameData.getFeverGauge() + 7);
 			damage = (float) (gameData.getAttack() * (1.5 + combo * 0.005));
 			updateTreeImage((int) damage);
+			coolTime = 0;
+			if (gameData.isFever()) {
+
+			} else {
+				imageList.get(0).remove();
+				imageList.remove(0);
+			}
 		} else {
 			// 완전 틀림, 콤보 취소, 자동으로 진행될 때 bad
 			// 넘기면 set에서 자동으로 max인지 아닌지 체크해줌
-			if (coolTime > 3) {
-				gameData.setMaxCombo(combo);
-				combo = 0;
-				gameData.setFeverGauge(gameData.getFeverGauge() + 5);
+			gameData.setMaxCombo(combo);
+			combo = 0;
+			if (coolTime > 5) {
 				if (checkAccuracy()) {
 					updateTreeImage(gameData.getAttack());
+					gameData.setFeverGauge(gameData.getFeverGauge() + 5);
+					imageList.get(0).remove();
+					imageList.remove(0);
 				}
 				coolTime = 0;
 			} else {
@@ -358,25 +383,30 @@ public class GameStage extends Stage {
 
 	private String checkRhythm(float x, float y) {
 		// 리듬 체크하는 로직 추가
-		if (imageList.get(0).getX() > big.getX() - 2 && imageList.get(0).getX() < big.getX() + 20) {
-			if (isLeftButton != imageList.get(0).isLeft()) {
-				Gdx.app.log(tag, "왼쪽이나 오른쪽이 맞지 않습니다");
-				return bad;
+		if (imageList.size() > 0) {
+			if (imageList.get(0).getX() > big.getX() && imageList.get(0).getX() < big.getX() + big.getWidth() + 10) {
+				if (isLeftButton != imageList.get(0).isLeft()) {
+					Gdx.app.log(tag, "왼쪽이나 오른쪽이 맞지 않습니다");
+					return bad;
+				} else {
+					Gdx.app.log(tag, perfect);
+					return perfect;
+				}
+			} else if (imageList.get(0).getX() > big.getX() + big.getWidth() + 10
+					&& imageList.get(0).getX() < big.getX() + big.getWidth() + 30) {
+				// 현재 눌러야할 버튼이 조준점보다 크고, 그 범위가 20이내라면
+				if (isLeftButton != imageList.get(0).isLeft()) {
+					Gdx.app.log(tag, "왼쪽이나 오른쪽이 맞지 않습니다");
+					return bad;
+				} else {
+					Gdx.app.log(tag, good);
+					return good;
+				}
 			} else {
-				Gdx.app.log(tag, perfect);
-				return perfect;
-			}
-		} else if (imageList.get(0).getX() > big.getX() + 20 && imageList.get(0).getX() < big.getX() + 60) {
-			// 현재 눌러야할 버튼이 조준점보다 크고, 그 범위가 20이내라면
-			if (isLeftButton != imageList.get(0).isLeft()) {
-				Gdx.app.log(tag, "왼쪽이나 오른쪽이 맞지 않습니다");
+				Gdx.app.log(tag, bad);
 				return bad;
-			} else {
-				Gdx.app.log(tag, good);
-				return good;
 			}
 		} else {
-			Gdx.app.log(tag, bad);
 			return bad;
 		}
 	}
@@ -398,7 +428,7 @@ public class GameStage extends Stage {
 
 	private void zazinmori(float delta) {
 		delayTime += delta;
-		if (delayTime > zazinmoriTime[index]) {
+		if (delayTime > zazinmoriTime[index] + 0.5f) {
 			if (zazinmoriIsLeft[index]) {
 				makeLeftObject();
 			} else {
@@ -416,29 +446,45 @@ public class GameStage extends Stage {
 	@Override
 	public void act(float delta) {
 		// 실사간 머니 증가 반영
+		if (gameData.getFeverGauge() > 100) {
+			gameData.setFever(true);
+		}
+
+		if (feverTime > gameData.getFeverTime()) {
+			feverTime = 0;
+			gameData.setFever(false);
+			gameData.setFeverGauge(0);
+		}
+
+		if (gameData.isFever()) {
+			feverTime += delta;
+		}
 		gameTime += delta;
 		coolTime += delta;
 		saveTime += delta;
 		zazinmori(delta);
 
 		for (Image image : imageList) {
-			image.setPosition(image.getX() - 3, image.getY());
+			image.setPosition(image.getX() - objectSpeed, image.getY());
 		}
 
 		if (!imageList.isEmpty()) {
-			if (imageList.get(0).getX() < big.getX() + big.getWidth()) {
+			if (imageList.get(0).getX() < big.getX()) {
 				imageList.get(0).remove();
 				imageList.remove(0);
+				combo = 0;
 				gameData.setMaxCombo(combo);
 			}
 		}
+		if (gameData.isFever()) {
 
-		// 게임 시간 상으로 1초가 지날 때 마다 작동하는 로직
-		if (gameTime > 5) {
-			// 나무 피가 달게 한다.
-			if (checkAccuracy()) {
-				updateTreeImage(gameData.getAttack());
-				gameTime = 0;
+		} else {
+			if (gameTime > 5) {
+				// 나무 피가 달게 한다.
+				if (checkAccuracy()) {
+					updateTreeImage(gameData.getAttack());
+					gameTime = 0;
+				}
 			}
 		}
 

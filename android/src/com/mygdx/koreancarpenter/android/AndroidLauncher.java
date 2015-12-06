@@ -85,7 +85,12 @@ public class AndroidLauncher extends AndroidApplication implements GameHelperLis
 
 	@Override
 	public void submitScoreGPGS(int score) {
-		Games.Leaderboards.submitScore(gameHelper.getApiClient(), "CgkI3rio7OYWEAIQAQ", score);
+
+		if (gameHelper.isSignedIn()) {
+			Games.Leaderboards.submitScore(gameHelper.getApiClient(), "CgkI3rio7OYWEAIQAQ", score);
+		} else if (!gameHelper.isConnecting()) {
+			loginGPGS();
+		}
 	}
 
 	@Override
@@ -117,6 +122,10 @@ public class AndroidLauncher extends AndroidApplication implements GameHelperLis
 
 	@Override
 	public void incrementAchivementGPGS(String achievementId) {
-		Games.Achievements.increment(gameHelper.getApiClient(), achievementId, 1);
+		if (gameHelper.isSignedIn()) {
+			Games.Achievements.increment(gameHelper.getApiClient(), achievementId, 1);
+		} else if (!gameHelper.isConnecting()) {
+			loginGPGS();
+		}
 	}
 }

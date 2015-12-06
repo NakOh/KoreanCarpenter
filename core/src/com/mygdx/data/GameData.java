@@ -28,7 +28,7 @@ public class GameData {
 	private int gloveMoney;
 	private int wagonMoney;
 
-	private int money = 999999999;
+	private int money;
 	private int tree;
 	private int jewelry;
 

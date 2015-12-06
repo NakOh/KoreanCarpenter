@@ -14,7 +14,7 @@ public class FormulaManager {
 	}
 
 	public int wagonMoneyFormula(int level) {
-		return 1000 * ((level * level) / 10);
+		return 500 + 1000 * ((level * level) / 10);
 	}
 
 }
