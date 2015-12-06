@@ -80,18 +80,18 @@ public class BagTable extends Table {
 		addListener();
 		this.setFillParent(true);
 		this.bottom();
-		this.add(new Image(axImage)).size(x / 4, 2 * y / 19);
-		this.add(axLabel).center().size((x / 4) * 2, 2 * y / 19);
-		this.add(axUpgradeButton).size(x / 4, 2 * y / 19);
+		this.add(new Image(axImage)).size(x * 0.2f, y * 0.1f);
+		this.add(axLabel).center().size(x * 0.466f, y * 0.1f);
+		this.add(axUpgradeButton).size(x * 0.334f, y * 0.1f);
 		this.row();
-		this.add(new Image(gloveImage)).left().size(x / 4, 2 * y / 19);
-		this.add(gloveLabel).center().size((x / 4) * 2, 2 * y / 19);
-		this.add(gloveUpgradeButton).size(x / 4, 2 * y / 19);
+		this.add(new Image(gloveImage)).left().size(x * 0.2f, y * 0.1f);
+		this.add(gloveLabel).center().size(x / 4, 2 * y / 19);
+		this.add(gloveUpgradeButton).size(x * 0.334f, y * 0.1f);
 		this.row();
-		this.add(new Image(wagonImage)).left().size(x / 4, 2 * y / 19);
-		this.add(wagonLabel).center().size((x / 4) * 2, 2 * y / 19);
-		this.add(wagonUpgradeButton).size(x / 4, 2 * y / 19);
-		this.padBottom(y / 19);
+		this.add(new Image(wagonImage)).left().size(x * 0.2f, y * 0.1f);
+		this.add(wagonLabel).center().size(x / 4, 2 * y / 19);
+		this.add(wagonUpgradeButton).size(x * 0.334f, y * 0.1f);
+		this.padBottom(y * (0.005f + 0.09005f));
 		return this;
 	}
 

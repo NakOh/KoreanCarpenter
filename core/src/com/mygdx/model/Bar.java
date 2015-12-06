@@ -12,6 +12,7 @@ public class Bar extends ProgressBar {
 	private String name;
 
 	private ProgressBarStyle barstyle_hp;
+	private ProgressBarStyle barstyle_fever;
 
 	private Skin skin;
 
@@ -31,8 +32,15 @@ public class Bar extends ProgressBar {
 			pixmap.fill();
 			skin.add("RED", new Texture(pixmap));
 		}
+		{
+			Pixmap pixmap = new Pixmap(1, 22, Format.RGBA8888);
+			pixmap.setColor(Color.GREEN);
+			pixmap.fill();
+			skin.add("GREEN", new Texture(pixmap));
+		}
 
 		barstyle_hp = new ProgressBarStyle(skin.getDrawable("WHITE"), skin.getDrawable("RED"));
+		barstyle_fever = new ProgressBarStyle(skin.getDrawable("WHITE"), skin.getDrawable("GREEN"));
 		this.name = name;
 		ProgressBarStyle progressBarStyle = barsStyle(this.name);
 		progressBarStyle.knobBefore = progressBarStyle.knob;
@@ -40,15 +48,15 @@ public class Bar extends ProgressBar {
 	}
 
 	public Bar(String name, Skin skin) {
-
 		this(name, 0, 100, 1, false, skin);
-
 	}
 
 	public ProgressBarStyle barsStyle(String barStyle) {
 		switch (barStyle) {
 		case "hp":
 			return barstyle_hp;
+		case "fever":
+			return barstyle_fever;
 		default:
 			Gdx.app.log("StatusBarUi", "barstyle type error");
 			return barstyle_hp;

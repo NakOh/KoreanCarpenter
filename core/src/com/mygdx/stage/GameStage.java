@@ -83,6 +83,7 @@ public class GameStage extends Stage {
 	private ArrayList<ObjectImage> imageList;
 
 	private Bar hpBar;
+	private Bar feverBar;
 	private int index;
 	private boolean isLeftButton;
 
@@ -94,6 +95,8 @@ public class GameStage extends Stage {
 		treeTexture100 = assetManager.get("texture/tree/tree100%.png");
 		treeTexture66 = assetManager.get("texture/tree/tree66%.png");
 		treeTexture33 = assetManager.get("texture/tree/tree33%.png");
+		smallLeftTexture = assetManager.get("texture/object/smallLeft.png");
+		smallRightTexture = assetManager.get("texture/object/smallRight.png");
 
 		stageX = this.getViewport().getScreenWidth();
 		stageY = this.getViewport().getScreenHeight();
@@ -124,27 +127,28 @@ public class GameStage extends Stage {
 		bigTexture = assetManager.get("texture/object/big.png");
 		imageList = new ArrayList<ObjectImage>();
 		big = new Image(bigTexture);
-		big.setSize(stageX / 7, 2 * stageY / 19);
-		big.setPosition(2 * stageX / 19, 17 * stageY / 19);
+		big.setSize(stageX * 0.066f, stageX * 0.066f);
+		big.setPosition(stageX / 19,
+				stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f + 0.037f + 0.03145f + 0.3515f) + 10);
 		addActor(big);
 	}
 
 	private void makeLeftObject() {
-		smallLeftTexture = assetManager.get("texture/object/smallLeft.png");
 		ObjectImage image = new ObjectImage(smallLeftTexture);
 		image.setLeft(true);
-		image.setSize(stageX / 7, 2 * stageY / 19);
-		image.setPosition(stageX, 17 * stageY / 19);
+		image.setSize(stageX * 0.066f, stageX * 0.066f);
+		image.setPosition(stageX,
+				stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f + 0.037f + 0.03145f + 0.3515f) + 10);
 		addActor(image);
 		imageList.add(image);
 	}
 
 	private void makeRightObject() {
-		smallRightTexture = assetManager.get("texture/object/smallRight.png");
 		ObjectImage image = new ObjectImage(smallRightTexture);
 		image.setLeft(false);
-		image.setSize(stageX / 7, 2 * stageY / 19);
-		image.setPosition(stageX, 17 * stageY / 19);
+		image.setSize(stageX * 0.066f, stageX * 0.066f);
+		image.setPosition(stageX,
+				stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f + 0.037f + 0.03145f + 0.3515f) + 10);
 		addActor(image);
 		imageList.add(image);
 	}
@@ -157,7 +161,7 @@ public class GameStage extends Stage {
 
 	private boolean updateSubTable() {
 		subTable1.reset();
-		subTable1.add(tree.getTreeImage()).size(stageX / 2, 7 * stageY / 19);
+		subTable1.add(tree.getTreeImage()).size(stageX / 2, stageY * 0.3515f);
 		return true;
 	}
 
@@ -172,9 +176,9 @@ public class GameStage extends Stage {
 			itemButton = new TextButton("아이템 버튼", skin);
 			endingButton = new TextButton("엔딩 버튼", skin);
 			table.bottom();
-			table.add(bagButton).size(stageX / 3, stageY / 19);
-			table.add(itemButton).size(stageX / 3, stageY / 19);
-			table.add(endingButton).size(stageX / 3, stageY / 19);
+			table.add(bagButton).size(stageX / 3, stageY * 0.09005f);
+			table.add(itemButton).size(stageX / 3, stageY * 0.09005f);
+			table.add(endingButton).size(stageX / 3, stageY * 0.09005f);
 		} else if (tableName.equals("game")) {
 			makeRandomTree();
 			subTable1 = new Table();
@@ -189,11 +193,9 @@ public class GameStage extends Stage {
 			itemButton2 = new TextButton("아이템2", skin);
 			comboLabel.setAlignment(Align.center);
 			moneyLabel.setAlignment(Align.center);
-			hpBar = new Bar("hp", skin);
-			hpBar.setValue(tree.getHp());
 			table.bottom();
-			table.padBottom(10 * stageY / 19);
-			subTable1.add(tree.getTreeImage()).size(stageX / 2, 7 * stageY / 19);
+			table.padBottom(stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f + 0.037f + 0.03145f));
+			subTable1.add(tree.getTreeImage()).size(stageX / 2, stageY * 0.3515f);
 			subTable2.add(comboLabel);
 			subTable2.row();
 			subTable2.add(moneyLabel);
@@ -209,16 +211,31 @@ public class GameStage extends Stage {
 			sellButton = new TextButton(gameData.getTree() + "\n" + "나무 판매", skin);
 			leftButton = new TextButton("왼쪽 버튼", skin);
 			rightButton = new TextButton("오른쪽 버튼", skin);
+			leftButton.getLabel().setFontScale(0.5f);
+			rightButton.getLabel().setFontScale(0.5f);
 			table.bottom();
-			table.add(leftButton).padRight(stageX / 4).height(2 * stageY / 19);
-			table.add(sellButton).padRight(stageX / 4).height(2 * stageY / 19);
-			table.add(rightButton).height(2 * stageY / 19 + 10);
-			table.padBottom(7 * stageY / 19);
+			table.add(leftButton).width(stageX * 0.2f).height(stageY * 0.0925f);
+			table.add(sellButton).width(stageX * 0.6f).height(stageY * 0.0925f);
+			table.add(rightButton).width(stageX * 0.2f).height(stageY * 0.0925f);
+			table.padBottom(stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f));
+
 		} else if (tableName.equals("hp")) {
+			hpBar = new Bar("hp", skin);
+			feverBar = new Bar("fever", skin);
+			hpBar.setValue(tree.getHp());
+			feverBar.setValue(gameData.getFeverGauge());
+
+			hpBar.getStyle().knob.setMinHeight(stageY * 0.03145f);
+			hpBar.getStyle().background.setMinHeight(stageY * 0.03145f);
+			feverBar.getStyle().knob.setMinHeight(stageY * 0.037f);
+			feverBar.getStyle().background.setMinHeight(stageY * 0.037f);
+
 			table.setFillParent(true);
-			table.add(hpBar).width(stageX).height(stageY / 19);
+			table.add(hpBar).width(stageX).height(stageY * 0.03145f);
+			table.row();
+			table.add(feverBar).fill().width(stageX).height(stageY * 0.037f);
 			table.bottom();
-			table.padBottom(9 * stageY / 19);
+			table.padBottom(stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f));
 		}
 		return table;
 	}
@@ -407,8 +424,9 @@ public class GameStage extends Stage {
 		for (Image image : imageList) {
 			image.setPosition(image.getX() - 3, image.getY());
 		}
+
 		if (!imageList.isEmpty()) {
-			if (imageList.get(0).getX() < big.getX() - 3) {
+			if (imageList.get(0).getX() < big.getX() + big.getWidth()) {
 				imageList.get(0).remove();
 				imageList.remove(0);
 				gameData.setMaxCombo(combo);
@@ -427,9 +445,11 @@ public class GameStage extends Stage {
 		moneyLabel.setText("현재 돈 " + gameData.getMoney());
 		comboLabel.setText("현재 Combo " + combo);
 		sellButton.setText(gameData.getTree() + "\n" + "나무 판매");
-		endingTable.act(delta);
+		EndingTable.getInstance(stageX, stageY).act(delta);
 		hpBar.setValue(tree.getHp());
+		feverBar.setValue(gameData.getFeverGauge());
 		hpBar.act(delta);
+		feverBar.act(delta);
 
 		if (saveTime > 5) {
 			saveManager.save();

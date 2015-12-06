@@ -27,7 +27,7 @@ public class EndingTable extends Table {
 		inTable = new Table();
 		for (int i = 0; i < 100; i++) {
 			endingListButton[i] = new TextButton("EndingList" + i, skin);
-			inTable.add(endingListButton[i]).size(x - 2, y / 19);
+			inTable.add(endingListButton[i]).size(x - 2, y * 0.1f);
 			inTable.row();
 		}
 		this.reset();
@@ -38,8 +38,8 @@ public class EndingTable extends Table {
 		scroll.setFlickScroll(true);
 		scroll.setOverscroll(false, false);
 
-		this.add(scroll).size(x, 6 * y / 19);
-		this.padBottom(y / 19);
+		this.add(scroll).size(x, y * 0.3f);
+		this.padBottom(y * (0.09005f + 0.005f));
 		return this;
 	}
 }
