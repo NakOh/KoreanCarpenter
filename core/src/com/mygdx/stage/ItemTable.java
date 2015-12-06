@@ -18,6 +18,7 @@ public class ItemTable extends Table {
 
 	private Texture backgroundTexture;
 	private Drawable background;
+	private static Table instance;
 
 	private Texture texture1;
 	private Texture texture2;
@@ -31,6 +32,13 @@ public class ItemTable extends Table {
 	public ItemTable() {
 		assetManager = AssetManager.getInstance();
 		backgroundTexture = assetManager.get("texture/white.png");
+	}
+
+	public static Table getInstance(int x, int y) {
+		if (instance == null) {
+			instance = new ItemTable().makeTable(x, y);
+		}
+		return instance;
 	}
 
 	public Table makeTable(int x, int y) {

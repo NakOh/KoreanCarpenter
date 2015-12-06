@@ -7,7 +7,9 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mygdx.manager.ScreenManager;
 import com.mygdx.manager.StageManager;
+import com.mygdx.service.Screens;
 
 public class MainScreen implements Screen, InputProcessor {
 	private final String tag = "MAIN_SCREEN";
@@ -57,13 +59,12 @@ public class MainScreen implements Screen, InputProcessor {
 	@Override
 	public void hide() {
 		Gdx.app.log(tag, "hide");
-		mainStage.dispose();
+		ScreenManager.getInstance().dispose(Screens.MAIN);
 	}
 
 	@Override
 	public void dispose() {
 		Gdx.app.log(tag, "dispose");
-		Gdx.app.exit();
 	}
 
 	@Override

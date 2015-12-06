@@ -5,7 +5,9 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.mygdx.manager.ScreenManager;
 import com.mygdx.manager.StageManager;
+import com.mygdx.service.Screens;
 
 public class LoadingScreen implements Screen {
 	private final String tag = "LOADING_SCREEN";
@@ -53,6 +55,7 @@ public class LoadingScreen implements Screen {
 	public void hide() {
 		Gdx.app.log(tag, "hide");
 		loadingStage.dispose();
+		ScreenManager.getInstance().dispose(Screens.LOAD);
 		this.dispose();
 	}
 

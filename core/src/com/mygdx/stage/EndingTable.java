@@ -12,6 +12,14 @@ public class EndingTable extends Table {
 	private ScrollPane scroll;
 	private TextButton[] endingListButton;
 	private Table inTable;
+	private static Table instance;
+
+	public static Table getInstance(int x, int y) {
+		if (instance == null) {
+			instance = new EndingTable().makeTable(x, y);
+		}
+		return instance;
+	}
 
 	public Table makeTable(int x, int y) {
 		skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
