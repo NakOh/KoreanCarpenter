@@ -2,7 +2,7 @@ package com.mygdx.manager;
 
 public class FormulaManager {
 	public int axUpgradeFormula(int level) {
-		return 4 + level * 3;
+		return 4 + (level * 3);
 	}
 
 	public int axMoneyFormula(int level) {

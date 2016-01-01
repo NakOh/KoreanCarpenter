@@ -28,6 +28,7 @@ public class GameStage extends Stage {
 	private final String perfect = "PERFECT";
 	private final String good = "GOOD";
 	private final String bad = "BAD";
+	private final String not = "NOT";
 
 	private com.badlogic.gdx.assets.AssetManager assetManager;
 	private SaveManager saveManager;
@@ -67,9 +68,10 @@ public class GameStage extends Stage {
 	private float delayTime;
 	private float saveTime;
 	private float feverTime;
-	private float[] zazinmoriTime = { 0.8f, 0.6f, 0.2f, 0.4f, 0.4f, 0.2f, 0.2f, 0.2f, 0.2f, 0.6f, 0.2f, 0.4f, 0.4f };
-	private boolean[] zazinmoriIsLeft = { true, false, true, false, true, false, true, false, true, false, true, false,
-			true };
+	private float[] zazinmoriTime = {0.8f, 0.6f, 0.2f, 0.4f, 0.4f, 0.2f, 0.2f,
+			0.2f, 0.2f, 0.6f, 0.2f, 0.4f, 0.4f};
+	private boolean[] zazinmoriIsLeft = {true, false, true, false, true, false,
+			true, false, true, false, true, false, true};
 	private float objectSpeed = 1f;
 	private Texture bigTexture;
 	private Texture smallLeftTexture;
@@ -129,8 +131,8 @@ public class GameStage extends Stage {
 		imageList = new ArrayList<ObjectImage>();
 		big = new Image(bigTexture);
 		big.setSize(stageX * 0.066f, stageX * 0.066f);
-		big.setPosition(stageX / 19,
-				stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f + 0.037f + 0.03145f + 0.3515f) + 10);
+		big.setPosition(stageX / 19, stageY * (0.09005f + 0.005f + 0.1f + 0.1f
+				+ 0.1f + 0.0925f + 0.037f + 0.03145f + 0.3515f) + 10);
 		addActor(big);
 	}
 
@@ -138,8 +140,8 @@ public class GameStage extends Stage {
 		ObjectImage image = new ObjectImage(smallLeftTexture);
 		image.setLeft(true);
 		image.setSize(stageX * 0.066f, stageX * 0.066f);
-		image.setPosition(stageX,
-				stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f + 0.037f + 0.03145f + 0.3515f) + 10);
+		image.setPosition(stageX, stageY * (0.09005f + 0.005f + 0.1f + 0.1f
+				+ 0.1f + 0.0925f + 0.037f + 0.03145f + 0.3515f) + 10);
 		addActor(image);
 		imageList.add(image);
 	}
@@ -148,8 +150,8 @@ public class GameStage extends Stage {
 		ObjectImage image = new ObjectImage(smallRightTexture);
 		image.setLeft(false);
 		image.setSize(stageX * 0.066f, stageX * 0.066f);
-		image.setPosition(stageX,
-				stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f + 0.037f + 0.03145f + 0.3515f) + 10);
+		image.setPosition(stageX, stageY * (0.09005f + 0.005f + 0.1f + 0.1f
+				+ 0.1f + 0.0925f + 0.037f + 0.03145f + 0.3515f) + 10);
 		addActor(image);
 		imageList.add(image);
 	}
@@ -195,8 +197,10 @@ public class GameStage extends Stage {
 			comboLabel.setAlignment(Align.center);
 			moneyLabel.setAlignment(Align.center);
 			table.bottom();
-			table.padBottom(stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f + 0.037f + 0.03145f));
-			subTable1.add(tree.getTreeImage()).size(stageX / 2, stageY * 0.3515f);
+			table.padBottom(stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f
+					+ 0.0925f + 0.037f + 0.03145f));
+			subTable1.add(tree.getTreeImage()).size(stageX / 2,
+					stageY * 0.3515f);
 			subTable2.add(comboLabel);
 			subTable2.row();
 			subTable2.add(moneyLabel);
@@ -209,7 +213,8 @@ public class GameStage extends Stage {
 
 		} else if (tableName.equals("mid")) {
 			table.setFillParent(true);
-			sellButton = new TextButton(gameData.getTree() + "\n" + "나무 판매", skin);
+			sellButton = new TextButton(gameData.getTree() + "\n" + "나무 판매",
+					skin);
 			leftButton = new TextButton("왼쪽 버튼", skin);
 			rightButton = new TextButton("오른쪽 버튼", skin);
 			leftButton.getLabel().setFontScale(0.5f);
@@ -217,7 +222,8 @@ public class GameStage extends Stage {
 			table.bottom();
 			table.add(leftButton).width(stageX * 0.2f).height(stageY * 0.0925f);
 			table.add(sellButton).width(stageX * 0.6f).height(stageY * 0.0925f);
-			table.add(rightButton).width(stageX * 0.2f).height(stageY * 0.0925f);
+			table.add(rightButton).width(stageX * 0.2f)
+					.height(stageY * 0.0925f);
 			table.padBottom(stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f));
 
 		} else if (tableName.equals("hp")) {
@@ -236,7 +242,8 @@ public class GameStage extends Stage {
 			table.row();
 			table.add(feverBar).fill().width(stageX).height(stageY * 0.037f);
 			table.bottom();
-			table.padBottom(stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f));
+			table.padBottom(stageY
+					* (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f));
 		}
 		return table;
 	}
@@ -263,7 +270,8 @@ public class GameStage extends Stage {
 		sellButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				gameData.setMoney(gameData.getMoney() + gameData.getTree() * 10);
+				gameData.setMoney(
+						gameData.getMoney() + gameData.getTree() * 10);
 				moneyLabel.setText("" + gameData.getMoney());
 				gameData.setTree(0);
 			}
@@ -276,7 +284,7 @@ public class GameStage extends Stage {
 					attackTree(perfect);
 				} else {
 					isLeftButton = true;
-					attackTree(checkRhythm(x, y));
+					attackTree(checkRhythm());
 				}
 			}
 		});
@@ -288,10 +296,44 @@ public class GameStage extends Stage {
 					attackTree(perfect);
 				} else {
 					isLeftButton = false;
-					attackTree(checkRhythm(x, y));
+					attackTree(checkRhythm());
 				}
 			}
 		});
+	}
+
+	private String checkRhythm() {
+		// 리듬 체크하는 로직 추가
+		// 처음 imageList가 비어있을 때 누르면 null 이 뜨기 때문에 0 보다 클 때를 체크한다.
+		if (imageList.size() > 0) {
+			if (imageList.get(0).getX() > big.getX() && imageList.get(0)
+					.getX() < big.getX() + big.getWidth() + 10) {
+				if (isLeftButton != imageList.get(0).isLeft()) {
+					Gdx.app.log(tag, "perfect범위지만 왼쪽이나 오른쪽이 맞지 않습니다");
+					return bad;
+				} else {
+					Gdx.app.log(tag, perfect);
+					return perfect;
+				}
+			} else if (imageList.get(0).getX() > big.getX() + big.getWidth()
+					+ 10
+					&& imageList.get(0).getX() < big.getX() + big.getWidth()
+							+ 20) {
+				if (isLeftButton != imageList.get(0).isLeft()) {
+					Gdx.app.log(tag, "good 범위지만 왼쪽이나 오른쪽이 맞지 않습니다");
+					return bad;
+				} else {
+					Gdx.app.log(tag, good);
+					return good;
+				}
+			} else {
+				Gdx.app.log(tag, not);
+				return not;
+			}
+		} else {
+			Gdx.app.log(tag, not);
+			return not;
+		}
 	}
 
 	private void attackTree(String check) {
@@ -323,7 +365,7 @@ public class GameStage extends Stage {
 				imageList.get(0).remove();
 				imageList.remove(0);
 			}
-		} else {
+		} else if (check.equals(bad)) {
 			// 완전 틀림, 콤보 취소, 자동으로 진행될 때 bad
 			// 넘기면 set에서 자동으로 max인지 아닌지 체크해줌
 			gameData.setMaxCombo(combo);
@@ -339,6 +381,11 @@ public class GameStage extends Stage {
 			} else {
 				Gdx.app.log(tag, "coolTime입니다");
 			}
+		} else {
+			// not 일때 아무것도 발생하지 않는다.
+			gameData.setMaxCombo(combo);
+			combo = 0;
+			Gdx.app.log(tag, "너무 멀리있습니다");
 		}
 	}
 
@@ -363,11 +410,14 @@ public class GameStage extends Stage {
 	private void updateTreeImage(int damage) {
 		tree.setHp(tree.getHp() - damage);
 		if ((100 * tree.getHp() / tree.getMaxHp()) <= 33) {
-			tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture33)));
+			tree.getTreeImage()
+					.setDrawable(new SpriteDrawable(new Sprite(treeTexture33)));
 		} else if ((100 * tree.getHp() / tree.getMaxHp()) <= 66) {
-			tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture66)));
+			tree.getTreeImage()
+					.setDrawable(new SpriteDrawable(new Sprite(treeTexture66)));
 		} else {
-			tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture100)));
+			tree.getTreeImage().setDrawable(
+					new SpriteDrawable(new Sprite(treeTexture100)));
 		}
 
 		if (checkDieTree()) {
@@ -379,36 +429,6 @@ public class GameStage extends Stage {
 			updateSubTable();
 		}
 
-	}
-
-	private String checkRhythm(float x, float y) {
-		// 리듬 체크하는 로직 추가
-		if (imageList.size() > 0) {
-			if (imageList.get(0).getX() > big.getX() && imageList.get(0).getX() < big.getX() + big.getWidth() + 10) {
-				if (isLeftButton != imageList.get(0).isLeft()) {
-					Gdx.app.log(tag, "왼쪽이나 오른쪽이 맞지 않습니다");
-					return bad;
-				} else {
-					Gdx.app.log(tag, perfect);
-					return perfect;
-				}
-			} else if (imageList.get(0).getX() > big.getX() + big.getWidth() + 10
-					&& imageList.get(0).getX() < big.getX() + big.getWidth() + 30) {
-				// 현재 눌러야할 버튼이 조준점보다 크고, 그 범위가 20이내라면
-				if (isLeftButton != imageList.get(0).isLeft()) {
-					Gdx.app.log(tag, "왼쪽이나 오른쪽이 맞지 않습니다");
-					return bad;
-				} else {
-					Gdx.app.log(tag, good);
-					return good;
-				}
-			} else {
-				Gdx.app.log(tag, bad);
-				return bad;
-			}
-		} else {
-			return bad;
-		}
 	}
 
 	private boolean checkStorage() {
