@@ -1,6 +1,6 @@
 package com.mygdx.koreancarpenter.desktop;
 
-import com.mygdx.model.IGoogleServices;
+import com.mygdx.service.IGoogleServices;
 
 public class ActionResolverDesktop implements IGoogleServices {
 	boolean signedInStateGPGS = false;

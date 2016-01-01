@@ -1,4 +1,4 @@
-package com.mygdx.model;
+package com.mygdx.service;
 
 public interface IGoogleServices {
 	public boolean getSignedInGPGS();

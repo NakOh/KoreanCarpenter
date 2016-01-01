@@ -2,7 +2,7 @@ package com.mygdx.koreancarpenter;
 
 import com.badlogic.gdx.Game;
 import com.mygdx.manager.ScreenManager;
-import com.mygdx.model.IGoogleServices;
+import com.mygdx.service.IGoogleServices;
 import com.mygdx.service.Screens;
 
 public class KoreanCarpenter extends Game {

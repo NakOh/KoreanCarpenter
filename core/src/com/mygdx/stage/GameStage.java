@@ -22,6 +22,7 @@ import com.mygdx.model.Bar;
 import com.mygdx.model.NormalTree;
 import com.mygdx.model.ObjectImage;
 import com.mygdx.model.Tree;
+import com.mygdx.service.LabServices;
 
 public class GameStage extends Stage {
 	private final String tag = "GAME_STAGE";
@@ -55,6 +56,7 @@ public class GameStage extends Stage {
 
 	private Label moneyLabel;
 	private Label comboLabel;
+	private Label jewelryLabel;
 
 	private int combo = 0;
 
@@ -68,10 +70,9 @@ public class GameStage extends Stage {
 	private float delayTime;
 	private float saveTime;
 	private float feverTime;
-	private float[] zazinmoriTime = {0.8f, 0.6f, 0.2f, 0.4f, 0.4f, 0.2f, 0.2f,
-			0.2f, 0.2f, 0.6f, 0.2f, 0.4f, 0.4f};
-	private boolean[] zazinmoriIsLeft = {true, false, true, false, true, false,
-			true, false, true, false, true, false, true};
+	private float[] zazinmoriTime = { 0.8f, 0.6f, 0.2f, 0.4f, 0.4f, 0.2f, 0.2f, 0.2f, 0.2f, 0.6f, 0.2f, 0.4f, 0.4f };
+	private boolean[] zazinmoriIsLeft = { true, false, true, false, true, false, true, false, true, false, true, false,
+			true };
 	private float objectSpeed = 1f;
 	private Texture bigTexture;
 	private Texture smallLeftTexture;
@@ -87,6 +88,8 @@ public class GameStage extends Stage {
 	private Bar feverBar;
 	private int index;
 	private boolean isLeftButton;
+
+	private LabServices lab;
 
 	public Stage makeStage() {
 		assetManager = AssetManager.getInstance();
@@ -131,8 +134,8 @@ public class GameStage extends Stage {
 		imageList = new ArrayList<ObjectImage>();
 		big = new Image(bigTexture);
 		big.setSize(stageX * 0.066f, stageX * 0.066f);
-		big.setPosition(stageX / 19, stageY * (0.09005f + 0.005f + 0.1f + 0.1f
-				+ 0.1f + 0.0925f + 0.037f + 0.03145f + 0.3515f) + 10);
+		big.setPosition(stageX / 19,
+				stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f + 0.037f + 0.03145f + 0.3515f) + 10);
 		addActor(big);
 	}
 
@@ -140,8 +143,8 @@ public class GameStage extends Stage {
 		ObjectImage image = new ObjectImage(smallLeftTexture);
 		image.setLeft(true);
 		image.setSize(stageX * 0.066f, stageX * 0.066f);
-		image.setPosition(stageX, stageY * (0.09005f + 0.005f + 0.1f + 0.1f
-				+ 0.1f + 0.0925f + 0.037f + 0.03145f + 0.3515f) + 10);
+		image.setPosition(stageX,
+				stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f + 0.037f + 0.03145f + 0.3515f) + 10);
 		addActor(image);
 		imageList.add(image);
 	}
@@ -150,8 +153,8 @@ public class GameStage extends Stage {
 		ObjectImage image = new ObjectImage(smallRightTexture);
 		image.setLeft(false);
 		image.setSize(stageX * 0.066f, stageX * 0.066f);
-		image.setPosition(stageX, stageY * (0.09005f + 0.005f + 0.1f + 0.1f
-				+ 0.1f + 0.0925f + 0.037f + 0.03145f + 0.3515f) + 10);
+		image.setPosition(stageX,
+				stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f + 0.037f + 0.03145f + 0.3515f) + 10);
 		addActor(image);
 		imageList.add(image);
 	}
@@ -189,21 +192,23 @@ public class GameStage extends Stage {
 			Table subTable3 = new Table();
 			table.setFillParent(true);
 			moneyLabel = new Label("현재 돈" + gameData.getMoney(), skin);
+			jewelryLabel = new Label("현재 보석 " + gameData.getJewelry(), skin);
 			comboLabel = new Label("현재 Combo" + combo, skin);
 			moneyLabel.setFontScale(0.8f);
 			comboLabel.setFontScale(0.8f);
+			jewelryLabel.setFontScale(0.8f);
 			itemButton1 = new TextButton("아이템1", skin);
 			itemButton2 = new TextButton("아이템2", skin);
 			comboLabel.setAlignment(Align.center);
 			moneyLabel.setAlignment(Align.center);
 			table.bottom();
-			table.padBottom(stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f
-					+ 0.0925f + 0.037f + 0.03145f));
-			subTable1.add(tree.getTreeImage()).size(stageX / 2,
-					stageY * 0.3515f);
+			table.padBottom(stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f + 0.037f + 0.03145f));
+			subTable1.add(tree.getTreeImage()).size(stageX / 2, stageY * 0.3515f);
 			subTable2.add(comboLabel);
 			subTable2.row();
 			subTable2.add(moneyLabel);
+			subTable2.row();
+			subTable2.add(jewelryLabel);
 			subTable3.add(itemButton1);
 			subTable3.row();
 			subTable3.add(itemButton2);
@@ -213,8 +218,7 @@ public class GameStage extends Stage {
 
 		} else if (tableName.equals("mid")) {
 			table.setFillParent(true);
-			sellButton = new TextButton(gameData.getTree() + "\n" + "나무 판매",
-					skin);
+			sellButton = new TextButton(gameData.getTree() + "\n" + "나무 판매", skin);
 			leftButton = new TextButton("왼쪽 버튼", skin);
 			rightButton = new TextButton("오른쪽 버튼", skin);
 			leftButton.getLabel().setFontScale(0.5f);
@@ -222,8 +226,7 @@ public class GameStage extends Stage {
 			table.bottom();
 			table.add(leftButton).width(stageX * 0.2f).height(stageY * 0.0925f);
 			table.add(sellButton).width(stageX * 0.6f).height(stageY * 0.0925f);
-			table.add(rightButton).width(stageX * 0.2f)
-					.height(stageY * 0.0925f);
+			table.add(rightButton).width(stageX * 0.2f).height(stageY * 0.0925f);
 			table.padBottom(stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f));
 
 		} else if (tableName.equals("hp")) {
@@ -242,8 +245,7 @@ public class GameStage extends Stage {
 			table.row();
 			table.add(feverBar).fill().width(stageX).height(stageY * 0.037f);
 			table.bottom();
-			table.padBottom(stageY
-					* (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f));
+			table.padBottom(stageY * (0.09005f + 0.005f + 0.1f + 0.1f + 0.1f + 0.0925f));
 		}
 		return table;
 	}
@@ -270,9 +272,9 @@ public class GameStage extends Stage {
 		sellButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				gameData.setMoney(
-						gameData.getMoney() + gameData.getTree() * 10);
+				gameData.setMoney(gameData.getMoney() + gameData.getTree() * 10);
 				moneyLabel.setText("" + gameData.getMoney());
+				lab.buyJewelry();
 				gameData.setTree(0);
 			}
 		});
@@ -306,8 +308,7 @@ public class GameStage extends Stage {
 		// 리듬 체크하는 로직 추가
 		// 처음 imageList가 비어있을 때 누르면 null 이 뜨기 때문에 0 보다 클 때를 체크한다.
 		if (imageList.size() > 0) {
-			if (imageList.get(0).getX() > big.getX() && imageList.get(0)
-					.getX() < big.getX() + big.getWidth() + 10) {
+			if (imageList.get(0).getX() > big.getX() && imageList.get(0).getX() < big.getX() + big.getWidth() + 10) {
 				if (isLeftButton != imageList.get(0).isLeft()) {
 					Gdx.app.log(tag, "perfect범위지만 왼쪽이나 오른쪽이 맞지 않습니다");
 					return bad;
@@ -315,10 +316,8 @@ public class GameStage extends Stage {
 					Gdx.app.log(tag, perfect);
 					return perfect;
 				}
-			} else if (imageList.get(0).getX() > big.getX() + big.getWidth()
-					+ 10
-					&& imageList.get(0).getX() < big.getX() + big.getWidth()
-							+ 20) {
+			} else if (imageList.get(0).getX() > big.getX() + big.getWidth() + 10
+					&& imageList.get(0).getX() < big.getX() + big.getWidth() + 20) {
 				if (isLeftButton != imageList.get(0).isLeft()) {
 					Gdx.app.log(tag, "good 범위지만 왼쪽이나 오른쪽이 맞지 않습니다");
 					return bad;
@@ -410,14 +409,11 @@ public class GameStage extends Stage {
 	private void updateTreeImage(int damage) {
 		tree.setHp(tree.getHp() - damage);
 		if ((100 * tree.getHp() / tree.getMaxHp()) <= 33) {
-			tree.getTreeImage()
-					.setDrawable(new SpriteDrawable(new Sprite(treeTexture33)));
+			tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture33)));
 		} else if ((100 * tree.getHp() / tree.getMaxHp()) <= 66) {
-			tree.getTreeImage()
-					.setDrawable(new SpriteDrawable(new Sprite(treeTexture66)));
+			tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture66)));
 		} else {
-			tree.getTreeImage().setDrawable(
-					new SpriteDrawable(new Sprite(treeTexture100)));
+			tree.getTreeImage().setDrawable(new SpriteDrawable(new Sprite(treeTexture100)));
 		}
 
 		if (checkDieTree()) {

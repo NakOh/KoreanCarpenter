@@ -3,7 +3,7 @@ package com.mygdx.manager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.IntMap;
-import com.mygdx.model.IGoogleServices;
+import com.mygdx.service.IGoogleServices;
 import com.mygdx.service.Screens;
 
 public class ScreenManager {
