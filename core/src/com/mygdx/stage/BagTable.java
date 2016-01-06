@@ -107,14 +107,35 @@ public class BagTable extends Table {
 			public void clicked(InputEvent event, float x, float y) {
 				// 현재 레벨 업그레이드에 필요한 돈이 현재 가진 돈 보다 작을 때 업그레이드 가능
 				if (gameData.getAxLevel() < gameData.getMAX_LEVEL()) {
-					if (gameData.getAxMoney() <= gameData.getMoney()) {
-						gameData.setMoney(gameData.getMoney() - gameData.getAxMoney());
-						gameData.setAxLevel(gameData.getAxLevel() + 1);
-						gameData.setAxMoney(formulaManager.axMoneyFormula(gameData.getAxLevel()));
-						gameData.setAttack(formulaManager.axUpgradeFormula(gameData.getAxLevel()));
-						axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV" + gameData.getAxLevel()
-								+ "\n" + gameData.getAxMoney());
-						axUpgradeButton.setText("레벨 업 \n 데미지" + formulaManager.axUpgradeFormula(gameData.getAxLevel()));
+					// 보석이 필요할때와 아닐 때를 구분하자.
+					if (gameData.getAxLevel() % 10 == 0) {
+						// 10으로 나누어 떨어질 때는 보석으로 업글
+						if (gameData.getAxLevel() == 10) {
+							if (gameData.getJewelry() > 100) {
+								gameData.setJewelry(gameData.getJewelry() - 100);
+								gameData.setAxLevel(gameData.getAxLevel() + 1);
+								gameData.setAxMoney(formulaManager.axMoneyFormula(gameData.getAxLevel()));
+								gameData.setAttack(formulaManager.axUpgradeFormula(gameData.getAxLevel()));
+								axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV"
+										+ gameData.getAxLevel() + "\n" + gameData.getAxMoney());
+								axUpgradeButton.setText(
+										"레벨 업 \n 데미지" + formulaManager.axUpgradeFormula(gameData.getAxLevel()));
+							}
+						}
+					} else {
+						// 나누어 떨어지지 않을 때는 골드로 업글
+						if (gameData.getAxMoney() <= gameData.getMoney()) {
+							gameData.setMoney(gameData.getMoney() - gameData.getAxMoney());
+							gameData.setAxLevel(gameData.getAxLevel() + 1);
+							gameData.setAxMoney(formulaManager.axMoneyFormula(gameData.getAxLevel()));
+							gameData.setAttack(formulaManager.axUpgradeFormula(gameData.getAxLevel()));
+							axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV"
+									+ gameData.getAxLevel() + "\n" + gameData.getAxMoney());
+							axUpgradeButton
+									.setText("레벨 업 \n 데미지" + formulaManager.axUpgradeFormula(gameData.getAxLevel()));
+						} else {
+
+						}
 					}
 				} else {
 					Gdx.app.log(tag, "업데이트 최대");
