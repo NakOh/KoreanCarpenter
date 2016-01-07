@@ -101,6 +101,52 @@ public class BagTable extends Table {
 		wagonImage = assetManager.get("texture/wagon/wagon.png");
 	}
 
+	private void checkJewelry(int jewelry) {
+		gameData.setJewelry(gameData.getJewelry() - jewelry);
+		gameData.setAxLevel(gameData.getAxLevel() + 1);
+		gameData.setAxMoney(formulaManager.axMoneyFormula(gameData.getAxLevel()));
+		gameData.setAttack(formulaManager.axUpgradeFormula(gameData.getAxLevel()));
+		axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV" + gameData.getAxLevel() + "\n"
+				+ gameData.getAxMoney());
+		axUpgradeButton.setText("레벨 업 \n 데미지" + formulaManager.axUpgradeFormula(gameData.getAxLevel()));
+	}
+
+	private void checkMoney(int index) {
+		switch (index) {
+		case 0:
+			gameData.setMoney(gameData.getMoney() - gameData.getAxMoney());
+			gameData.setAxLevel(gameData.getAxLevel() + 1);
+			gameData.setAxMoney(formulaManager.axMoneyFormula(gameData.getAxLevel()));
+			gameData.setAttack(formulaManager.axUpgradeFormula(gameData.getAxLevel()));
+			// 10단위 일때는 돈이 아니라 보석으로 표시하도록 수정
+			axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV" + gameData.getAxLevel() + "\n"
+					+ gameData.getAxMoney());
+			axUpgradeButton.setText("레벨 업 \n 데미지" + formulaManager.axUpgradeFormula(gameData.getAxLevel()));
+			break;
+		case 1:
+			gameData.setMoney(gameData.getMoney() - gameData.getGloveMoney());
+			gameData.setGloveLevel(gameData.getGloveLevel() + 1);
+			gameData.setAccuracy(gameData.getAccuracy() + 1);
+			gameData.setGloveMoney(formulaManager.gloveMoneyFormula(gameData.getGloveLevel()));
+			gloveLabel.setText(gameData.getGloveName()[gameData.getGloveNameIndex()] + " LV" + gameData.getGloveLevel()
+					+ "\n" + gameData.getGloveMoney());
+			gloveUpgradeButton.setText("레벨 업 \n 적중률" + (gameData.getAccuracy() + 1));
+			break;
+		case 2:
+			gameData.setMoney(gameData.getMoney() - gameData.getWagonMoney());
+			gameData.setWagonLevel(gameData.getWagonLevel() + 1);
+			gameData.setStorage(gameData.getStorage() + 1000);
+			gameData.setWagonMoney(formulaManager.wagonMoneyFormula(gameData.getWagonLevel()));
+			wagonLabel.setText(gameData.getWagonName()[gameData.getWagonNameIndex()] + " LV" + gameData.getWagonLevel()
+					+ "\n" + gameData.getWagonMoney());
+			wagonUpgradeButton.setText("레벨 업 \n 저장량" + (gameData.getStorage() + 1000));
+			break;
+		default:
+			break;
+		}
+
+	}
+
 	private void addListener() {
 		axUpgradeButton.addListener(new ClickListener() {
 			@Override
@@ -111,31 +157,16 @@ public class BagTable extends Table {
 					if (gameData.getAxLevel() % 10 == 0) {
 						// 10으로 나누어 떨어질 때는 보석으로 업글
 						if (gameData.getAxLevel() == 10) {
-							if (gameData.getJewelry() > 100) {
-								gameData.setJewelry(gameData.getJewelry() - 100);
-								gameData.setAxLevel(gameData.getAxLevel() + 1);
-								gameData.setAxMoney(formulaManager.axMoneyFormula(gameData.getAxLevel()));
-								gameData.setAttack(formulaManager.axUpgradeFormula(gameData.getAxLevel()));
-								axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV"
-										+ gameData.getAxLevel() + "\n" + gameData.getAxMoney());
-								axUpgradeButton.setText(
-										"레벨 업 \n 데미지" + formulaManager.axUpgradeFormula(gameData.getAxLevel()));
+							if (gameData.getJewelry() >= 100) {
+								checkJewelry(100);
+							}
+						} else if (gameData.getAxLevel() == 20) {
+							if (gameData.getJewelry() >= 150) {
+								checkJewelry(150);
 							}
 						}
-					} else {
-						// 나누어 떨어지지 않을 때는 골드로 업글
-						if (gameData.getAxMoney() <= gameData.getMoney()) {
-							gameData.setMoney(gameData.getMoney() - gameData.getAxMoney());
-							gameData.setAxLevel(gameData.getAxLevel() + 1);
-							gameData.setAxMoney(formulaManager.axMoneyFormula(gameData.getAxLevel()));
-							gameData.setAttack(formulaManager.axUpgradeFormula(gameData.getAxLevel()));
-							axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV"
-									+ gameData.getAxLevel() + "\n" + gameData.getAxMoney());
-							axUpgradeButton
-									.setText("레벨 업 \n 데미지" + formulaManager.axUpgradeFormula(gameData.getAxLevel()));
-						} else {
-
-						}
+					} else if (gameData.getAxMoney() <= gameData.getMoney()) {
+						checkMoney(0);
 					}
 				} else {
 					Gdx.app.log(tag, "업데이트 최대");
@@ -147,13 +178,7 @@ public class BagTable extends Table {
 			public void clicked(InputEvent event, float x, float y) {
 				if (gameData.getGloveLevel() < gameData.getMAX_LEVEL()) {
 					if (gameData.getGloveMoney() <= gameData.getMoney()) {
-						gameData.setMoney(gameData.getMoney() - gameData.getGloveMoney());
-						gameData.setGloveLevel(gameData.getGloveLevel() + 1);
-						gameData.setAccuracy(gameData.getAccuracy() + 1);
-						gameData.setGloveMoney(formulaManager.gloveMoneyFormula(gameData.getGloveLevel()));
-						gloveLabel.setText(gameData.getGloveName()[gameData.getGloveNameIndex()] + " LV"
-								+ gameData.getGloveLevel() + "\n" + gameData.getGloveMoney());
-						gloveUpgradeButton.setText("레벨 업 \n 적중률" + (gameData.getAccuracy() + 1));
+						checkMoney(1);
 					}
 				} else {
 					Gdx.app.log(tag, "업데이트 최대");
@@ -165,13 +190,7 @@ public class BagTable extends Table {
 			public void clicked(InputEvent event, float x, float y) {
 				if (gameData.getWagonLevel() < gameData.getMAX_LEVEL()) {
 					if (gameData.getWagonMoney() <= gameData.getMoney()) {
-						gameData.setMoney(gameData.getMoney() - gameData.getWagonMoney());
-						gameData.setWagonLevel(gameData.getWagonLevel() + 1);
-						gameData.setStorage(gameData.getStorage() + 1000);
-						gameData.setWagonMoney(formulaManager.wagonMoneyFormula(gameData.getWagonLevel()));
-						wagonLabel.setText(gameData.getWagonName()[gameData.getWagonNameIndex()] + " LV"
-								+ gameData.getWagonLevel() + "\n" + gameData.getWagonMoney());
-						wagonUpgradeButton.setText("레벨 업 \n 저장량" + (gameData.getStorage() + 1000));
+						checkMoney(2);
 					}
 				} else {
 					Gdx.app.log(tag, "업데이트 최대");
