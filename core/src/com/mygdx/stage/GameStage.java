@@ -40,7 +40,6 @@ public class GameStage extends Stage {
 	private Table midTable;
 	private Table hpBarTable;
 
-	private BagTable bagTable;
 	private Table subTable1;
 
 	// 임시 Button, 실제 사용할 UI로 대체
@@ -109,11 +108,11 @@ public class GameStage extends Stage {
 		ItemTable.getInstance(stageX, stageY);
 		EndingTable.getInstance(stageX, stageY);
 
-		bagTable = new BagTable();
-
 		gameTable = makeTable("game");
 		bottomTable = makeTable("bottom");
-		levelTable = makeTable("level");
+		levelTable = new Table();
+		levelTable.setFillParent(true);
+		levelTable.addActor(makeTable("level"));
 		midTable = makeTable("mid");
 		hpBarTable = makeTable("hp");
 
@@ -175,7 +174,7 @@ public class GameStage extends Stage {
 		skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 		Table table = new Table();
 		if (tableName.equals("level")) {
-			table = bagTable.makeTable(stageX, stageY);
+			table = BagTable.getInstance(stageX, stageY);
 		} else if (tableName.equals("bottom")) {
 			table.setFillParent(true);
 			bagButton = new TextButton("가방 버튼", skin);
@@ -274,7 +273,7 @@ public class GameStage extends Stage {
 			public void clicked(InputEvent event, float x, float y) {
 				gameData.setMoney(gameData.getMoney() + gameData.getTree() * 10);
 				moneyLabel.setText("" + gameData.getMoney());
-				lab.buyJewelry();
+				// lab.buyJewelry();
 				gameData.setTree(0);
 			}
 		});
@@ -340,7 +339,7 @@ public class GameStage extends Stage {
 			// 정확하게 일치할 때
 			float damage;
 			combo++;
-			gameData.setFeverGauge(gameData.getFeverGauge() + 10);
+			gameData.setFeverGauge(gameData.getFeverGauge() + 5f);
 			damage = (float) (gameData.getAttack() * (2 + combo * 0.01));
 			updateTreeImage((int) damage);
 			coolTime = 0;
@@ -369,10 +368,10 @@ public class GameStage extends Stage {
 			// 넘기면 set에서 자동으로 max인지 아닌지 체크해줌
 			gameData.setMaxCombo(combo);
 			combo = 0;
-			if (coolTime > 5) {
+			if (coolTime > 3) {
 				if (checkAccuracy()) {
 					updateTreeImage(gameData.getAttack());
-					gameData.setFeverGauge(gameData.getFeverGauge() + 5);
+					gameData.setFeverGauge(gameData.getFeverGauge() + 3.5f);
 					imageList.get(0).remove();
 					imageList.remove(0);
 				}
@@ -503,7 +502,7 @@ public class GameStage extends Stage {
 				}
 			}
 		}
-
+		jewelryLabel.setText("현재 보석 " + gameData.getJewelry());
 		moneyLabel.setText("현재 돈 " + gameData.getMoney());
 		comboLabel.setText("현재 Combo " + combo);
 		sellButton.setText(gameData.getTree() + "\n" + "나무 판매");

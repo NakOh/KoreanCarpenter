@@ -23,6 +23,7 @@ public class SaveManager {
 	public void save() {
 		Preferences prefs = Gdx.app.getPreferences("My Preferences");
 		prefs.putInteger("money", gameData.getMoney());
+		prefs.putInteger("jewelry", gameData.getJewelry());
 		prefs.putInteger("axLevel", gameData.getAxLevel());
 		prefs.putInteger("gloveLevel", gameData.getGloveLevel());
 		prefs.putInteger("wagonLevel", gameData.getWagonLevel());
@@ -35,6 +36,7 @@ public class SaveManager {
 
 	public void load() {
 		Preferences prefs = Gdx.app.getPreferences("My Preferences");
+		gameData.setJewelry(prefs.getInteger("jewelry", 0));
 		gameData.setMoney(prefs.getInteger("money", 0));
 		gameData.setAxLevel(prefs.getInteger("axLevel", 1));
 		gameData.setGloveLevel(prefs.getInteger("gloveLevel", 1));

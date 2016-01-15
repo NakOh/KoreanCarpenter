@@ -22,15 +22,15 @@ public class GameData {
 
 	private boolean fever;
 	private float feverTime = 3f;
-	private int feverGauge;
+	private float feverGauge;
 
 	private int axMoney;
 	private int gloveMoney;
 	private int wagonMoney;
 
-	private int money;
+	private int money = 100000000;
 	private int tree;
-	private int jewelry;
+	private int jewelry = 1000;
 
 	private int axNameIndex = 0;
 	private int gloveNameIndex = 0;
@@ -253,11 +253,11 @@ public class GameData {
 		this.feverTime = feverTime;
 	}
 
-	public int getFeverGauge() {
+	public float getFeverGauge() {
 		return feverGauge;
 	}
 
-	public void setFeverGauge(int feverGauge) {
+	public void setFeverGauge(float feverGauge) {
 		this.feverGauge = feverGauge;
 	}
 

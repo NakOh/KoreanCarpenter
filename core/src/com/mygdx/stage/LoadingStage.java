@@ -57,7 +57,7 @@ public class LoadingStage extends Stage {
 
 		AssetManager.allAssetsload();
 		saveManager = SaveManager.getInstance();
-		saveManager.load();
+		// saveManager.load();
 		return this;
 	}
 

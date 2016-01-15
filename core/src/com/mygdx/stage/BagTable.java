@@ -64,11 +64,11 @@ public class BagTable extends Table {
 		gameData.setAttack(formulaManager.axUpgradeFormula(gameData.getAxLevel() - 1));
 
 		axLabel = new Label(gameData.getAxName()[gameData.getAxNameIndex()] + " LV" + gameData.getAxLevel() + "\n"
-				+ gameData.getAxMoney(), skin);
+				+ "돈 " + gameData.getAxMoney(), skin);
 		gloveLabel = new Label(gameData.getGloveName()[gameData.getGloveNameIndex()] + " LV" + gameData.getGloveLevel()
-				+ "\n" + gameData.getGloveMoney(), skin);
+				+ "\n" + "돈 " + gameData.getGloveMoney(), skin);
 		wagonLabel = new Label(gameData.getWagonName()[gameData.getWagonNameIndex()] + " LV" + gameData.getWagonLevel()
-				+ "\n" + gameData.getWagonMoney(), skin);
+				+ "\n" + "돈 " + gameData.getWagonMoney(), skin);
 
 		axLabel.setAlignment(Align.center);
 		gloveLabel.setAlignment(Align.center);
@@ -101,14 +101,31 @@ public class BagTable extends Table {
 		wagonImage = assetManager.get("texture/wagon/wagon.png");
 	}
 
-	private void checkJewelry(int jewelry) {
+	private void checkJewelry(int index, int jewelry) {
 		gameData.setJewelry(gameData.getJewelry() - jewelry);
-		gameData.setAxLevel(gameData.getAxLevel() + 1);
-		gameData.setAxMoney(formulaManager.axMoneyFormula(gameData.getAxLevel()));
-		gameData.setAttack(formulaManager.axUpgradeFormula(gameData.getAxLevel()));
-		axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV" + gameData.getAxLevel() + "\n"
-				+ gameData.getAxMoney());
-		axUpgradeButton.setText("레벨 업 \n 데미지" + formulaManager.axUpgradeFormula(gameData.getAxLevel()));
+		if (index == 0) {
+			gameData.setAxLevel(gameData.getAxLevel() + 1);
+			gameData.setAxMoney(formulaManager.axMoneyFormula(gameData.getAxLevel()));
+			gameData.setAccuracy(gameData.getAccuracy() + 1);
+			axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV" + gameData.getAxLevel() + "\n" + "돈"
+					+ gameData.getAxMoney());
+			axUpgradeButton.setText("레벨 업 \n 데미지" + formulaManager.axUpgradeFormula(gameData.getAxLevel()));
+		} else if (index == 1) {
+			gameData.setGloveLevel(gameData.getGloveLevel() + 1);
+			gameData.setAccuracy(gameData.getAccuracy() + 1);
+			gameData.setGloveMoney(formulaManager.gloveMoneyFormula(gameData.getGloveLevel()));
+			gloveLabel.setText(gameData.getGloveName()[gameData.getGloveNameIndex()] + " LV" + gameData.getGloveLevel()
+					+ "\n" + gameData.getGloveMoney());
+			gloveUpgradeButton.setText("레벨 업 \n 적중률" + (gameData.getAccuracy() + 1));
+		} else if (index == 2) {
+			gameData.setWagonLevel(gameData.getWagonLevel() + 1);
+			gameData.setStorage(gameData.getStorage() + 1000);
+			gameData.setWagonMoney(formulaManager.wagonMoneyFormula(gameData.getWagonLevel()));
+			wagonLabel.setText(gameData.getWagonName()[gameData.getWagonNameIndex()] + " LV" + gameData.getWagonLevel()
+					+ "\n" + gameData.getWagonMoney());
+			wagonUpgradeButton.setText("레벨 업 \n 저장량" + (gameData.getStorage() + 1000));
+
+		}
 	}
 
 	private void checkMoney(int index) {
@@ -118,9 +135,27 @@ public class BagTable extends Table {
 			gameData.setAxLevel(gameData.getAxLevel() + 1);
 			gameData.setAxMoney(formulaManager.axMoneyFormula(gameData.getAxLevel()));
 			gameData.setAttack(formulaManager.axUpgradeFormula(gameData.getAxLevel()));
+
 			// 10단위 일때는 돈이 아니라 보석으로 표시하도록 수정
-			axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV" + gameData.getAxLevel() + "\n"
-					+ gameData.getAxMoney());
+			if (gameData.getAxLevel() == 9) {
+				axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV" + gameData.getAxLevel() + "\n"
+						+ "보석 100개");
+			} else if (gameData.getAxLevel() == 19) {
+				axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV" + gameData.getAxLevel() + "\n"
+						+ "보석 150개");
+			} else if (gameData.getAxLevel() == 29) {
+				axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV" + gameData.getAxLevel() + "\n"
+						+ "보석 200개");
+			} else if (gameData.getAxLevel() == 39) {
+				axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV" + gameData.getAxLevel() + "\n"
+						+ "보석 250개");
+			} else if (gameData.getAxLevel() == 49) {
+				axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV" + gameData.getAxLevel() + "\n"
+						+ "보석 300개");
+			} else {
+				axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV" + gameData.getAxLevel() + "\n"
+						+ "돈 " + gameData.getAxMoney());
+			}
 			axUpgradeButton.setText("레벨 업 \n 데미지" + formulaManager.axUpgradeFormula(gameData.getAxLevel()));
 			break;
 		case 1:
@@ -128,8 +163,25 @@ public class BagTable extends Table {
 			gameData.setGloveLevel(gameData.getGloveLevel() + 1);
 			gameData.setAccuracy(gameData.getAccuracy() + 1);
 			gameData.setGloveMoney(formulaManager.gloveMoneyFormula(gameData.getGloveLevel()));
-			gloveLabel.setText(gameData.getGloveName()[gameData.getGloveNameIndex()] + " LV" + gameData.getGloveLevel()
-					+ "\n" + gameData.getGloveMoney());
+			if (gameData.getGloveLevel() == 9) {
+				gloveLabel.setText(gameData.getGloveName()[gameData.getGloveNameIndex()] + " LV"
+						+ gameData.getGloveLevel() + "\n" + "보석 " + "100개");
+			} else if (gameData.getGloveLevel() == 19) {
+				gloveLabel.setText(gameData.getGloveName()[gameData.getGloveNameIndex()] + " LV"
+						+ gameData.getGloveLevel() + "\n" + "보석 " + "150개");
+			} else if (gameData.getGloveLevel() == 29) {
+				gloveLabel.setText(gameData.getGloveName()[gameData.getGloveNameIndex()] + " LV"
+						+ gameData.getGloveLevel() + "\n" + "보석 " + "200개");
+			} else if (gameData.getGloveLevel() == 39) {
+				gloveLabel.setText(gameData.getGloveName()[gameData.getGloveNameIndex()] + " LV"
+						+ gameData.getGloveLevel() + "\n" + "보석 " + "250개");
+			} else if (gameData.getGloveLevel() == 49) {
+				gloveLabel.setText(gameData.getGloveName()[gameData.getGloveNameIndex()] + " LV"
+						+ gameData.getGloveLevel() + "\n" + "보석 " + "300개");
+			} else {
+				gloveLabel.setText(gameData.getGloveName()[gameData.getGloveNameIndex()] + " LV"
+						+ gameData.getGloveLevel() + "\n" + "돈 " + gameData.getGloveMoney());
+			}
 			gloveUpgradeButton.setText("레벨 업 \n 적중률" + (gameData.getAccuracy() + 1));
 			break;
 		case 2:
@@ -137,8 +189,26 @@ public class BagTable extends Table {
 			gameData.setWagonLevel(gameData.getWagonLevel() + 1);
 			gameData.setStorage(gameData.getStorage() + 1000);
 			gameData.setWagonMoney(formulaManager.wagonMoneyFormula(gameData.getWagonLevel()));
-			wagonLabel.setText(gameData.getWagonName()[gameData.getWagonNameIndex()] + " LV" + gameData.getWagonLevel()
-					+ "\n" + gameData.getWagonMoney());
+			if (gameData.getWagonLevel() == 9) {
+				wagonLabel.setText(gameData.getWagonName()[gameData.getWagonNameIndex()] + " LV"
+						+ gameData.getWagonLevel() + "\n" + "보석 100개");
+			} else if (gameData.getWagonLevel() == 19) {
+				wagonLabel.setText(gameData.getWagonName()[gameData.getWagonNameIndex()] + " LV"
+						+ gameData.getWagonLevel() + "\n" + "보석 150개");
+			} else if (gameData.getWagonLevel() == 29) {
+				wagonLabel.setText(gameData.getWagonName()[gameData.getWagonNameIndex()] + " LV"
+						+ gameData.getWagonLevel() + "\n" + "보석 200개");
+			} else if (gameData.getWagonLevel() == 39) {
+				wagonLabel.setText(gameData.getWagonName()[gameData.getWagonNameIndex()] + " LV"
+						+ gameData.getWagonLevel() + "\n" + "보석 250개");
+			} else if (gameData.getWagonLevel() == 49) {
+				wagonLabel.setText(gameData.getWagonName()[gameData.getWagonNameIndex()] + " LV"
+						+ gameData.getWagonLevel() + "\n" + "보석 300개");
+			} else {
+				wagonLabel.setText(gameData.getWagonName()[gameData.getWagonNameIndex()] + " LV"
+						+ gameData.getWagonLevel() + "\n" + "돈 " + gameData.getWagonMoney());
+			}
+
 			wagonUpgradeButton.setText("레벨 업 \n 저장량" + (gameData.getStorage() + 1000));
 			break;
 		default:
@@ -153,16 +223,28 @@ public class BagTable extends Table {
 			public void clicked(InputEvent event, float x, float y) {
 				// 현재 레벨 업그레이드에 필요한 돈이 현재 가진 돈 보다 작을 때 업그레이드 가능
 				if (gameData.getAxLevel() < gameData.getMAX_LEVEL()) {
-					// 보석이 필요할때와 아닐 때를 구분하자.
-					if (gameData.getAxLevel() % 10 == 0) {
-						// 10으로 나누어 떨어질 때는 보석으로 업글
-						if (gameData.getAxLevel() == 10) {
+					// 보석이 필요할때와 아닐 때를 구분하자. 9, 19, 29, 39, 49 일때는 보석으로 결제하도록!
+					if (gameData.getAxLevel() == 9 || gameData.getAxLevel() == 19 || gameData.getAxLevel() == 29
+							|| gameData.getAxLevel() == 39 || gameData.getAxLevel() == 49) {
+						if (gameData.getAxLevel() == 9) {
 							if (gameData.getJewelry() >= 100) {
-								checkJewelry(100);
+								checkJewelry(0, 100);
 							}
-						} else if (gameData.getAxLevel() == 20) {
+						} else if (gameData.getAxLevel() == 19) {
 							if (gameData.getJewelry() >= 150) {
-								checkJewelry(150);
+								checkJewelry(0, 150);
+							}
+						} else if (gameData.getAxLevel() == 29) {
+							if (gameData.getJewelry() >= 200) {
+								checkJewelry(0, 200);
+							}
+						} else if (gameData.getAxLevel() == 39) {
+							if (gameData.getJewelry() >= 250) {
+								checkJewelry(0, 250);
+							}
+						} else if (gameData.getAxLevel() == 49) {
+							if (gameData.getJewelry() >= 300) {
+								checkJewelry(0, 300);
 							}
 						}
 					} else if (gameData.getAxMoney() <= gameData.getMoney()) {
@@ -177,7 +259,32 @@ public class BagTable extends Table {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (gameData.getGloveLevel() < gameData.getMAX_LEVEL()) {
-					if (gameData.getGloveMoney() <= gameData.getMoney()) {
+					// 보석이 필요할때와 아닐 때를 구분하자. 9, 19, 29, 39, 49 일때는 보석으로 결제하도록!
+					if (gameData.getGloveLevel() == 9 || gameData.getGloveLevel() == 19
+							|| gameData.getGloveLevel() == 29 || gameData.getGloveLevel() == 39
+							|| gameData.getGloveLevel() == 49) {
+						if (gameData.getGloveLevel() == 9) {
+							if (gameData.getJewelry() >= 100) {
+								checkJewelry(1, 100);
+							}
+						} else if (gameData.getGloveLevel() == 19) {
+							if (gameData.getJewelry() >= 150) {
+								checkJewelry(1, 150);
+							}
+						} else if (gameData.getGloveLevel() == 29) {
+							if (gameData.getJewelry() >= 200) {
+								checkJewelry(1, 200);
+							}
+						} else if (gameData.getGloveLevel() == 39) {
+							if (gameData.getJewelry() >= 250) {
+								checkJewelry(1, 250);
+							}
+						} else if (gameData.getGloveLevel() == 49) {
+							if (gameData.getJewelry() >= 300) {
+								checkJewelry(1, 300);
+							}
+						}
+					} else if (gameData.getGloveMoney() <= gameData.getMoney()) {
 						checkMoney(1);
 					}
 				} else {
@@ -189,7 +296,32 @@ public class BagTable extends Table {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				if (gameData.getWagonLevel() < gameData.getMAX_LEVEL()) {
-					if (gameData.getWagonMoney() <= gameData.getMoney()) {
+					// 보석이 필요할때와 아닐 때를 구분하자. 9, 19, 29, 39, 49 일때는 보석으로 결제하도록!
+					if (gameData.getWagonLevel() == 9 || gameData.getWagonLevel() == 19
+							|| gameData.getWagonLevel() == 29 || gameData.getWagonLevel() == 39
+							|| gameData.getWagonLevel() == 49) {
+						if (gameData.getWagonLevel() == 9) {
+							if (gameData.getJewelry() >= 100) {
+								checkJewelry(1, 100);
+							}
+						} else if (gameData.getWagonLevel() == 19) {
+							if (gameData.getJewelry() >= 150) {
+								checkJewelry(1, 150);
+							}
+						} else if (gameData.getWagonLevel() == 29) {
+							if (gameData.getJewelry() >= 200) {
+								checkJewelry(1, 200);
+							}
+						} else if (gameData.getWagonLevel() == 39) {
+							if (gameData.getJewelry() >= 250) {
+								checkJewelry(1, 250);
+							}
+						} else if (gameData.getWagonLevel() == 49) {
+							if (gameData.getJewelry() >= 300) {
+								checkJewelry(1, 300);
+							}
+						}
+					} else if (gameData.getWagonMoney() <= gameData.getMoney()) {
 						checkMoney(2);
 					}
 				} else {
