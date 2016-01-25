@@ -2,11 +2,18 @@ package com.mygdx.stage;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.pay.Information;
+import com.badlogic.gdx.pay.PurchaseManagerConfig;
+import com.badlogic.gdx.pay.PurchaseObserver;
+import com.badlogic.gdx.pay.PurchaseSystem;
+import com.badlogic.gdx.pay.Transaction;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.mygdx.manager.AssetManager;
 
@@ -32,6 +39,67 @@ public class ItemTable extends Table {
 	public ItemTable() {
 		assetManager = AssetManager.getInstance();
 		backgroundTexture = assetManager.get("texture/white.png");
+		if (PurchaseSystem.hasManager()) {
+			// purchase system is ready to start. Let's initialize our product
+			// list etc...
+			PurchaseManagerConfig config = new PurchaseManagerConfig();
+			config.addStoreParam(PurchaseManagerConfig.STORE_NAME_ANDROID_GOOGLE, "jewelry");
+			config.addStoreParam(PurchaseManagerConfig.STORE_NAME_ANDROID_GOOGLE, "adrenaline");
+			config.addStoreParam(PurchaseManagerConfig.STORE_NAME_ANDROID_GOOGLE, "barkas");
+
+			// let's start the purchase system...
+			PurchaseSystem.install(new PurchaseObserver() {
+
+				@Override
+				public void handleInstall() {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void handleInstallError(Throwable arg0) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void handlePurchase(Transaction arg0) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void handlePurchaseCanceled() {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void handlePurchaseError(Throwable arg0) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void handleRestore(Transaction[] arg0) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void handleRestoreError(Throwable arg0) {
+					// TODO Auto-generated method stub
+
+				}
+			}, config);
+
+			// to make a purchase (results are reported to the observer)
+			// PurchaseSystem.purchase("jewelry");
+
+			// obtain localized product information (not supported by all
+			// platforms)
+			Information information = PurchaseSystem.getInformation("product_identifier");
+		}
 	}
 
 	public static Table getInstance(int x, int y) {
@@ -68,6 +136,22 @@ public class ItemTable extends Table {
 		this.add(itemBuyButton1).size(x / 2, y * 0.05f);
 		this.add(itemBuyButton2).size(x / 2, y * 0.05f);
 		this.padBottom(y * (0.09005f + 0.005f));
+		addListener();
 		return this;
+	}
+
+	private void addListener() {
+		itemBuyButton1.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				PurchaseSystem.purchase("adrenaline");
+			}
+		});
+		itemBuyButton2.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				PurchaseSystem.purchase("barkas");
+			}
+		});
 	}
 }

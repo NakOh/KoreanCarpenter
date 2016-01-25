@@ -22,7 +22,6 @@ import com.mygdx.model.Bar;
 import com.mygdx.model.NormalTree;
 import com.mygdx.model.ObjectImage;
 import com.mygdx.model.Tree;
-import com.mygdx.service.LabServices;
 
 public class GameStage extends Stage {
 	private final String tag = "GAME_STAGE";
@@ -87,8 +86,6 @@ public class GameStage extends Stage {
 	private Bar feverBar;
 	private int index;
 	private boolean isLeftButton;
-
-	private LabServices lab;
 
 	public Stage makeStage() {
 		assetManager = AssetManager.getInstance();

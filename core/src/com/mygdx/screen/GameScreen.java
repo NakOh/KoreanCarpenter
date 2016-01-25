@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.manager.SaveManager;
+import com.mygdx.manager.ScreenManager;
 import com.mygdx.manager.StageManager;
 
 public class GameScreen implements Screen {
@@ -18,6 +19,9 @@ public class GameScreen implements Screen {
 	public void show() {
 		saveManager = SaveManager.getInstance();
 		stageManager = StageManager.getInstance();
+		if (ScreenManager.getInstance().getAdsController().isWifiConnected()) {
+			ScreenManager.getInstance().getAdsController().showBannerAd();
+		}
 		gameStage = stageManager.getStage("game");
 		setInputProcessor();
 	}

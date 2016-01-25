@@ -3,6 +3,9 @@ package com.mygdx.koreancarpenter.android;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.GameHelper;
 import com.google.example.games.basegameutils.GameHelper.GameHelperListener;
@@ -11,16 +14,26 @@ import com.mygdx.koreancarpenter.util.Constants.IAB;
 import com.mygdx.koreancarpenter.util.IabHelper;
 import com.mygdx.koreancarpenter.util.IabResult;
 import com.mygdx.koreancarpenter.util.Purchase;
+import com.mygdx.service.AdsController;
 import com.mygdx.service.IGoogleServices;
 import com.mygdx.service.LabServices;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
-public class AndroidLauncher extends AndroidApplication implements GameHelperListener, IGoogleServices, LabServices {
+public class AndroidLauncher extends AndroidApplication
+		implements GameHelperListener, IGoogleServices, LabServices, AdsController {
 	private final String TAG = "android";
+	private static final String BANNER_AD_UNIT_ID = "ca-app-pub-1040234573987867/4011271831";
+	AdView bannerAd;
 	private GameHelper gameHelper;
 	private IabHelper mHelper;
 
@@ -39,7 +52,17 @@ public class AndroidLauncher extends AndroidApplication implements GameHelperLis
 		});
 
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new KoreanCarpenter(this), config);
+		View gameView = initializeForView(new KoreanCarpenter(this, this), config);
+		setupAds();
+
+		RelativeLayout layout = new RelativeLayout(this);
+		layout.addView(gameView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT);
+		params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+		layout.addView(bannerAd, params);
+
+		setContentView(layout);
 
 		if (gameHelper == null) {
 			gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
@@ -47,6 +70,14 @@ public class AndroidLauncher extends AndroidApplication implements GameHelperLis
 		}
 
 		gameHelper.setup(this);
+	}
+
+	public void setupAds() {
+		bannerAd = new AdView(this);
+		bannerAd.setVisibility(View.INVISIBLE);
+		bannerAd.setBackgroundColor(0xff000000); // black
+		bannerAd.setAdUnitId(BANNER_AD_UNIT_ID);
+		bannerAd.setAdSize(AdSize.SMART_BANNER);
 	}
 
 	@Override
@@ -181,5 +212,37 @@ public class AndroidLauncher extends AndroidApplication implements GameHelperLis
 	public void buyJewelry() {
 		Gdx.app.log("IAB", "보석을 구매합니다");
 		mHelper.launchPurchaseFlow(this, IAB.JEWELRY, RC_REQUEST, mPurchaseFinishedListener, "HANDLE_PAYLOADS");
+	}
+
+	@Override
+	public void showBannerAd() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				bannerAd.setVisibility(View.VISIBLE);
+				AdRequest.Builder builder = new AdRequest.Builder();
+				AdRequest ad = builder.build();
+				bannerAd.loadAd(ad);
+			}
+		});
+	}
+
+	@Override
+	public void hideBannerAd() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				bannerAd.setVisibility(View.INVISIBLE);
+			}
+		});
+
+	}
+
+	@Override
+	public boolean isWifiConnected() {
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo ni = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+		return (ni != null && ni.isConnected());
 	}
 }
