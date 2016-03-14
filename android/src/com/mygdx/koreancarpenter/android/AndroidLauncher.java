@@ -9,10 +9,12 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.GameHelper;
 import com.google.example.games.basegameutils.GameHelper.GameHelperListener;
+import com.mygdx.data.GameData;
 import com.mygdx.koreancarpenter.KoreanCarpenter;
 import com.mygdx.koreancarpenter.util.Constants.IAB;
 import com.mygdx.koreancarpenter.util.IabHelper;
 import com.mygdx.koreancarpenter.util.IabResult;
+import com.mygdx.koreancarpenter.util.Inventory;
 import com.mygdx.koreancarpenter.util.Purchase;
 import com.mygdx.service.AdsController;
 import com.mygdx.service.IGoogleServices;
@@ -49,10 +51,11 @@ public class AndroidLauncher extends AndroidApplication
 				}
 				Log.d("IAB", "Billing Success: " + result);
 			}
+
 		});
 
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		View gameView = initializeForView(new KoreanCarpenter(this, this), config);
+		View gameView = initializeForView(new KoreanCarpenter(this, this, this), config);
 		setupAds();
 
 		RelativeLayout layout = new RelativeLayout(this);
@@ -204,6 +207,7 @@ public class AndroidLauncher extends AndroidApplication
 
 			if (purchase.getSku().equals(IAB.JEWELRY)) {
 				Log.d("IAB", "보석을 구매하였습니다");
+				GameData.getInstance().setJewelry(GameData.getInstance().getJewelry() + 10);
 			}
 		}
 	};
@@ -245,4 +249,32 @@ public class AndroidLauncher extends AndroidApplication
 
 		return (ni != null && ni.isConnected());
 	}
+
+	// Listener that's called when we finish querying the items and
+	// subscriptions we own
+	IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
+		public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
+			Log.d("IAB", "Query inventory finished.");
+
+			// Have we been disposed of in the meantime? If so, quit.
+			if (mHelper == null)
+				return;
+
+			// Is it a failure?
+			if (result.isFailure()) {
+				// handle failure here
+				return;
+			}
+
+			// Do we have the premium upgrade?
+			// Purchase removeAdPurchase = inventory.getPurchase(JEWELRY);
+			// mAdsRemoved = (removeAdPurchase != null);
+		}
+	};
+
+	@Override
+	public void processPurchases() {
+		mHelper.queryInventoryAsync(mGotInventoryListener);
+	}
+
 }

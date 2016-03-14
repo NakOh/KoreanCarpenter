@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.IntMap;
 import com.mygdx.service.AdsController;
 import com.mygdx.service.IGoogleServices;
+import com.mygdx.service.LabServices;
 import com.mygdx.service.Screens;
 
 public class ScreenManager {
@@ -13,6 +14,7 @@ public class ScreenManager {
 	private IntMap<Screen> screens;
 	private IGoogleServices actionResolver;
 	private AdsController adsController;
+	private LabServices labServices;
 
 	private ScreenManager() {
 		screens = new IntMap<Screen>();
@@ -25,10 +27,12 @@ public class ScreenManager {
 		return instance;
 	}
 
-	public void initialize(Game game, IGoogleServices actionResolver, AdsController adsController) {
+	public void initialize(Game game, IGoogleServices actionResolver, AdsController adsController,
+			LabServices labServices) {
 		this.game = game;
 		this.setActionResolver(actionResolver);
 		this.setAdsController(adsController);
+		this.setLabServices(labServices);
 	}
 
 	public void show(Screens screen) {
@@ -68,6 +72,14 @@ public class ScreenManager {
 
 	public void setAdsController(AdsController adsController) {
 		this.adsController = adsController;
+	}
+
+	public LabServices getLabServices() {
+		return labServices;
+	}
+
+	public void setLabServices(LabServices labServices) {
+		this.labServices = labServices;
 	}
 
 }

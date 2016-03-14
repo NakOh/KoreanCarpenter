@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -22,6 +23,7 @@ import com.mygdx.model.Bar;
 import com.mygdx.model.NormalTree;
 import com.mygdx.model.ObjectImage;
 import com.mygdx.model.Tree;
+import com.mygdx.popup.ShopPopup;
 
 public class GameStage extends Stage {
 	private final String tag = "GAME_STAGE";
@@ -52,9 +54,13 @@ public class GameStage extends Stage {
 	private TextButton itemButton1;
 	private TextButton itemButton2;
 
+	private TextButton shopButton;
+
 	private Label moneyLabel;
 	private Label comboLabel;
 	private Label jewelryLabel;
+
+	private ShopPopup shopPopup;
 
 	private int combo = 0;
 
@@ -85,7 +91,9 @@ public class GameStage extends Stage {
 	private Bar hpBar;
 	private Bar feverBar;
 	private int index;
+
 	private boolean isLeftButton;
+	private boolean isClick;
 
 	public Stage makeStage() {
 		assetManager = AssetManager.getInstance();
@@ -195,6 +203,7 @@ public class GameStage extends Stage {
 			jewelryLabel.setFontScale(0.8f);
 			itemButton1 = new TextButton("아이템1", skin);
 			itemButton2 = new TextButton("아이템2", skin);
+			shopButton = new TextButton("상점", skin);
 			comboLabel.setAlignment(Align.center);
 			moneyLabel.setAlignment(Align.center);
 			table.bottom();
@@ -205,6 +214,8 @@ public class GameStage extends Stage {
 			subTable2.add(moneyLabel);
 			subTable2.row();
 			subTable2.add(jewelryLabel);
+			subTable3.add(shopButton);
+			subTable3.row();
 			subTable3.add(itemButton1);
 			subTable3.row();
 			subTable3.add(itemButton2);
@@ -296,6 +307,19 @@ public class GameStage extends Stage {
 					isLeftButton = false;
 					attackTree(checkRhythm());
 				}
+			}
+		});
+		shopButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				// 누르면 팝업 창 뜨도록 하자.
+				isClick = true;
+				shopPopup = new ShopPopup("", skin);
+				addActor(shopPopup);
+				shopPopup.setVisible(true);
+				shopPopup.setTouchable(Touchable.enabled);
+				shopPopup.setSize(stageX / 2, stageY / 2);
+				shopPopup.setPosition(stageX / 2, stageY / 2, Align.center);
 			}
 		});
 	}
@@ -457,63 +481,70 @@ public class GameStage extends Stage {
 
 	@Override
 	public void act(float delta) {
-		// 실사간 머니 증가 반영
-		if (gameData.getFeverGauge() > 100) {
-			gameData.setFever(true);
-		}
-
-		if (feverTime > gameData.getFeverTime()) {
-			feverTime = 0;
-			gameData.setFever(false);
-			gameData.setFeverGauge(0);
-		}
-
-		if (gameData.isFever()) {
-			feverTime += delta;
-		}
-		gameTime += delta;
-		coolTime += delta;
-		saveTime += delta;
-		zazinmori(delta);
-
-		for (Image image : imageList) {
-			image.setPosition(image.getX() - objectSpeed, image.getY());
-		}
-
-		if (!imageList.isEmpty()) {
-			if (imageList.get(0).getX() < big.getX()) {
-				imageList.get(0).remove();
-				imageList.remove(0);
-				combo = 0;
-				gameData.setMaxCombo(combo);
+		if (isClick) {
+			if (!shopPopup.isVisible()) {
+				isClick = false;
 			}
-		}
-		if (gameData.isFever()) {
-
+			shopPopup.act(delta);
 		} else {
-			if (gameTime > 5) {
-				// 나무 피가 달게 한다.
-				if (checkAccuracy()) {
-					updateTreeImage(gameData.getAttack());
-					gameTime = 0;
+			// 실사간 머니 증가 반영
+			if (gameData.getFeverGauge() > 100) {
+				gameData.setFever(true);
+			}
+
+			if (feverTime > gameData.getFeverTime()) {
+				feverTime = 0;
+				gameData.setFever(false);
+				gameData.setFeverGauge(0);
+			}
+
+			if (gameData.isFever()) {
+				feverTime += delta;
+			}
+			gameTime += delta;
+			coolTime += delta;
+			saveTime += delta;
+			zazinmori(delta);
+
+			for (Image image : imageList) {
+				image.setPosition(image.getX() - objectSpeed, image.getY());
+			}
+
+			if (!imageList.isEmpty()) {
+				if (imageList.get(0).getX() < big.getX()) {
+					imageList.get(0).remove();
+					imageList.remove(0);
+					combo = 0;
+					gameData.setMaxCombo(combo);
 				}
 			}
-		}
-		jewelryLabel.setText("현재 보석 " + gameData.getJewelry());
-		moneyLabel.setText("현재 돈 " + gameData.getMoney());
-		comboLabel.setText("현재 Combo " + combo);
-		sellButton.setText(gameData.getTree() + "\n" + "나무 판매");
-		EndingTable.getInstance(stageX, stageY).act(delta);
-		hpBar.setValue(tree.getHp());
-		feverBar.setValue(gameData.getFeverGauge());
-		hpBar.act(delta);
-		feverBar.act(delta);
+			if (gameData.isFever()) {
 
-		if (saveTime > 5) {
-			saveManager.save();
-			saveTime = 0;
-		}
+			} else {
+				if (gameTime > 5) {
+					// 나무 피가 달게 한다.
+					if (checkAccuracy()) {
+						updateTreeImage(gameData.getAttack());
+						gameTime = 0;
+					}
+				}
+			}
+			jewelryLabel.setText("현재 보석 " + gameData.getJewelry());
+			moneyLabel.setText("현재 돈 " + gameData.getMoney());
+			comboLabel.setText("현재 Combo " + combo);
+			sellButton.setText(gameData.getTree() + "\n" + "나무 판매");
+			EndingTable.getInstance(stageX, stageY).act(delta);
+			hpBar.setValue(tree.getHp());
+			feverBar.setValue(gameData.getFeverGauge());
+			hpBar.act(delta);
+			feverBar.act(delta);
 
+			if (saveTime > 5) {
+				saveManager.save();
+				saveTime = 0;
+			}
+
+		}
 	}
 
 }

@@ -7,4 +7,6 @@ public interface LabServices {
 	static final int RC_REQUEST = 10001;
 
 	public void buyJewelry();
+
+	public void processPurchases();
 }
