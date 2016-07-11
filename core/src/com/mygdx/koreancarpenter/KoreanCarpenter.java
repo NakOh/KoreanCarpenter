@@ -18,6 +18,11 @@ public class KoreanCarpenter extends Game {
 		this.labServices = labServices;
 	}
 
+	public KoreanCarpenter(IGoogleServices actionResolver, AdsController adsController) {
+		this.actionResolver = actionResolver;
+		this.adsController = adsController;
+	}
+
 	@Override
 	public void create() {
 		ScreenManager.getInstance().initialize(this, this.actionResolver, this.adsController, this.labServices);
