@@ -529,6 +529,7 @@ public class GameStage extends Stage {
 					}
 				}
 			}
+
 			jewelryLabel.setText("현재 보석 " + gameData.getJewelry());
 			moneyLabel.setText("현재 돈 " + gameData.getMoney());
 			comboLabel.setText("현재 Combo " + combo);

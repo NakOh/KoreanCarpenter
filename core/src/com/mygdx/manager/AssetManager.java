@@ -31,11 +31,23 @@ public class AssetManager {
 		instance.load("texture/ax/ax_01.png", Texture.class);
 		instance.load("texture/ax/ax_02.png", Texture.class);
 		instance.load("texture/ax/ax_03.png", Texture.class);
+		instance.load("texture/ax/ax_04.png", Texture.class);
+		instance.load("texture/ax/ax_05.png", Texture.class);
 
 		instance.load("texture/glove/glove.png", Texture.class);
 		instance.load("texture/glove/glove_01.png", Texture.class);
+		instance.load("texture/glove/glove_02.png", Texture.class);
+		instance.load("texture/glove/glove_03.png", Texture.class);
+		instance.load("texture/glove/glove_04.png", Texture.class);
+		instance.load("texture/glove/glove_05.png", Texture.class);
 
 		instance.load("texture/wagon/wagon.png", Texture.class);
+		instance.load("texture/wagon/wagon_01.png", Texture.class);
+		instance.load("texture/wagon/wagon_02.png", Texture.class);
+		instance.load("texture/wagon/wagon_03.png", Texture.class);
+		instance.load("texture/wagon/wagon_04.png", Texture.class);
+		instance.load("texture/wagon/wagon_05.png", Texture.class);
+
 		instance.load("texture/wagon/wagon_tree.png", Texture.class);
 
 		instance.load("texture/gold.png", Texture.class);

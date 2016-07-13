@@ -2,6 +2,7 @@ package com.mygdx.stage;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.data.GameData;
 import com.mygdx.manager.AssetManager;
@@ -32,9 +34,13 @@ public class BagTable extends Table {
 	private TextButton wagonUpgradeButton;
 
 	// Image
-	private Texture axImage;
-	private Texture gloveImage;
-	private Texture wagonImage;
+	private Texture axTexture;
+	private Texture gloveTexture;
+	private Texture wagonTexture;
+
+	private Image axImage;
+	private Image gloveImage;
+	private Image wagonImage;
 
 	private GameData gameData;
 	private FormulaManager formulaManager;
@@ -77,18 +83,22 @@ public class BagTable extends Table {
 		gloveUpgradeButton = new TextButton("레벨 업 \n 적중률" + (gameData.getAccuracy() + 1), skin);
 		wagonUpgradeButton = new TextButton("레벨 업 \n 저장량" + (gameData.getStorage() + 1000), skin);
 
+		axImage = new Image(axTexture);
+		gloveImage = new Image(gloveTexture);
+		wagonImage = new Image(wagonTexture);
+
 		addListener();
 		this.setFillParent(true);
 		this.bottom();
-		this.add(new Image(axImage)).size(x * 0.2f, y * 0.1f);
+		this.add(axImage).size(x * 0.2f, y * 0.1f);
 		this.add(axLabel).center().size(x * 0.466f, y * 0.1f);
 		this.add(axUpgradeButton).size(x * 0.334f, y * 0.1f);
 		this.row();
-		this.add(new Image(gloveImage)).left().size(x * 0.2f, y * 0.1f);
+		this.add(gloveImage).left().size(x * 0.2f, y * 0.1f);
 		this.add(gloveLabel).center().size(x / 4, 2 * y / 19);
 		this.add(gloveUpgradeButton).size(x * 0.334f, y * 0.1f);
 		this.row();
-		this.add(new Image(wagonImage)).left().size(x * 0.2f, y * 0.1f);
+		this.add(wagonImage).left().size(x * 0.2f, y * 0.1f);
 		this.add(wagonLabel).center().size(x / 4, 2 * y / 19);
 		this.add(wagonUpgradeButton).size(x * 0.334f, y * 0.1f);
 		this.padBottom(y * (0.005f + 0.09005f));
@@ -96,9 +106,9 @@ public class BagTable extends Table {
 	}
 
 	private void getTexture() {
-		axImage = assetManager.get("texture/ax/ax.png");
-		gloveImage = assetManager.get("texture/glove/glove.png");
-		wagonImage = assetManager.get("texture/wagon/wagon.png");
+		axTexture = assetManager.get("texture/ax/ax.png");
+		gloveTexture = assetManager.get("texture/glove/glove.png");
+		wagonTexture = assetManager.get("texture/wagon/wagon.png");
 	}
 
 	private void checkJewelry(int index, int jewelry) {
@@ -110,6 +120,23 @@ public class BagTable extends Table {
 			axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV" + gameData.getAxLevel() + "\n" + "돈"
 					+ gameData.getAxMoney());
 			axUpgradeButton.setText("레벨 업 \n 데미지" + formulaManager.axUpgradeFormula(gameData.getAxLevel()));
+			// 이미지 바꿔 끼기
+			if (gameData.getAxLevel() == 10) {
+				axTexture = assetManager.get("texture/ax/ax_01.png");
+				axImage.setDrawable(new SpriteDrawable(new Sprite(axTexture)));
+			} else if (gameData.getAxLevel() == 20) {
+				axTexture = assetManager.get("texture/ax/ax_02.png");
+				axImage.setDrawable(new SpriteDrawable(new Sprite(axTexture)));
+			} else if (gameData.getAxLevel() == 30) {
+				axTexture = assetManager.get("texture/ax/ax_03.png");
+				axImage.setDrawable(new SpriteDrawable(new Sprite(axTexture)));
+			} else if (gameData.getAxLevel() == 40) {
+				axTexture = assetManager.get("texture/ax/ax_04.png");
+				axImage.setDrawable(new SpriteDrawable(new Sprite(axTexture)));
+			} else if (gameData.getAxLevel() == 50) {
+				axTexture = assetManager.get("texture/ax/ax_05.png");
+				axImage.setDrawable(new SpriteDrawable(new Sprite(axTexture)));
+			}
 		} else if (index == 1) {
 			gameData.setGloveLevel(gameData.getGloveLevel() + 1);
 			gameData.setAccuracy(gameData.getAccuracy() + 1);
@@ -117,6 +144,22 @@ public class BagTable extends Table {
 			gloveLabel.setText(gameData.getGloveName()[gameData.getGloveNameIndex()] + " LV" + gameData.getGloveLevel()
 					+ "\n" + gameData.getGloveMoney());
 			gloveUpgradeButton.setText("레벨 업 \n 적중률" + (gameData.getAccuracy() + 1));
+			if (gameData.getGloveLevel() == 10) {
+				gloveTexture = assetManager.get("texture/glove/glove_01.png");
+				gloveImage.setDrawable(new SpriteDrawable(new Sprite(gloveTexture)));
+			} else if (gameData.getGloveLevel() == 20) {
+				gloveTexture = assetManager.get("texture/glove/glove_02.png");
+				gloveImage.setDrawable(new SpriteDrawable(new Sprite(gloveTexture)));
+			} else if (gameData.getGloveLevel() == 30) {
+				gloveTexture = assetManager.get("texture/glove/glove_03.png");
+				gloveImage.setDrawable(new SpriteDrawable(new Sprite(gloveTexture)));
+			} else if (gameData.getGloveLevel() == 40) {
+				gloveTexture = assetManager.get("texture/glove/glove_04.png");
+				gloveImage.setDrawable(new SpriteDrawable(new Sprite(gloveTexture)));
+			} else if (gameData.getGloveLevel() == 50) {
+				gloveTexture = assetManager.get("texture/glove/glove_05.png");
+				gloveImage.setDrawable(new SpriteDrawable(new Sprite(gloveTexture)));
+			}
 		} else if (index == 2) {
 			gameData.setWagonLevel(gameData.getWagonLevel() + 1);
 			gameData.setStorage(gameData.getStorage() + 1000);
@@ -124,7 +167,22 @@ public class BagTable extends Table {
 			wagonLabel.setText(gameData.getWagonName()[gameData.getWagonNameIndex()] + " LV" + gameData.getWagonLevel()
 					+ "\n" + gameData.getWagonMoney());
 			wagonUpgradeButton.setText("레벨 업 \n 저장량" + (gameData.getStorage() + 1000));
-
+			if (gameData.getWagonLevel() == 10) {
+				wagonTexture = assetManager.get("texture/wagon/wagon_01.png");
+				wagonImage.setDrawable(new SpriteDrawable(new Sprite(wagonTexture)));
+			} else if (gameData.getWagonLevel() == 20) {
+				wagonTexture = assetManager.get("texture/wagon/wagon_02.png");
+				wagonImage.setDrawable(new SpriteDrawable(new Sprite(wagonTexture)));
+			} else if (gameData.getWagonLevel() == 30) {
+				wagonTexture = assetManager.get("texture/wagon/wagon_03.png");
+				wagonImage.setDrawable(new SpriteDrawable(new Sprite(wagonTexture)));
+			} else if (gameData.getWagonLevel() == 40) {
+				wagonTexture = assetManager.get("texture/wagon/wagon_04.png");
+				wagonImage.setDrawable(new SpriteDrawable(new Sprite(wagonTexture)));
+			} else if (gameData.getWagonLevel() == 50) {
+				wagonTexture = assetManager.get("texture/wagon/wagon_05.png");
+				wagonImage.setDrawable(new SpriteDrawable(new Sprite(wagonTexture)));
+			}
 		}
 	}
 
@@ -156,7 +214,9 @@ public class BagTable extends Table {
 				axLabel.setText(gameData.getAxName()[gameData.getAxNameIndex()] + " LV" + gameData.getAxLevel() + "\n"
 						+ "돈 " + gameData.getAxMoney());
 			}
+
 			axUpgradeButton.setText("레벨 업 \n 데미지" + formulaManager.axUpgradeFormula(gameData.getAxLevel()));
+
 			break;
 		case 1:
 			gameData.setMoney(gameData.getMoney() - gameData.getGloveMoney());

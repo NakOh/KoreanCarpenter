@@ -8,8 +8,8 @@ public class DesktopLauncher {
 	public static void main(String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Korean Carpenter";
-		config.width = 1920;
-		config.height = 1080;
+		config.width = 1080;
+		config.height = 920;
 		config.resizable = false;
 		new LwjglApplication(new KoreanCarpenter(new ActionResolverDesktop(), new AdsMobControllerDesktop()), config);
 	}
